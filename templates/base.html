@@ -1,0 +1,12 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{% block title %}Medki | Continuidade do cuidado{% endblock %}</title><link rel="stylesheet" href="{% static 'app.css' %}"><script src="{% static 'app.js' %}" defer></script></head>
+<body data-authenticated="{{ user.is_authenticated|yesno:'yes,no' }}" data-user="{{ user.pk|default:'' }}">
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<header><div class="nav-wrap"><a class="brand" href="{% url 'dashboard' %}"><span class="brand-icon" aria-hidden="true">✚</span> medki<span class="brand-caption">Cuidado que continua.</span></a>
+{% if user.is_authenticated %}<nav aria-label="Principal"><a href="{% url 'dashboard' %}">Notificações</a><a href="{% url 'patients' %}">Pacientes</a>{% if user.role == 'pharmacy' %}<a href="{% url 'report' %}">Indicadores</a>{% endif %}{% if user.responsible %}<a href="{% url 'accounts' %}">Contas</a><a href="{% url 'unit_settings' %}">Prazos</a>{% endif %}</nav><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="subtle" type="submit">Sair</button></form>{% endif %}</div></header>
+<main id="conteudo" tabindex="-1">{% if user.is_authenticated %}<div class="context">{{ user.get_role_display }} <span aria-hidden="true">/</span> {{ user.unit|default:'Acompanhamento familiar' }}{% if user.microarea %} / {{ user.microarea }}{% endif %}</div>{% endif %}
+{% for message in messages %}<div class="message {{ message.tags }}" role="status">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}</main>
+<footer><span>Medki · RemédioEmCasa-Alerta</span><a href="{% url 'privacy' %}">Privacidade</a><span>Demonstração acadêmica · dados fictícios</span></footer>
+{% if user.is_authenticated %}<dialog id="session-warning" aria-labelledby="session-title"><h2 id="session-title">Sua sessão vai expirar</h2><p>Você está há quase 30 minutos sem atividade. Deseja continuar?</p><form id="renew-session" method="post" action="{% url 'renew' %}">{% csrf_token %}<button>Continuar conectado</button></form><p id="session-error" role="alert"></p></dialog>{% endif %}
+</body></html>
