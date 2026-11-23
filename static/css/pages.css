@@ -1,0 +1,70 @@
+.login-grid{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  padding: 3rem 0
+}
+.intro h1{
+  font-size: clamp(2.5rem,4vw,3.8rem)
+}
+.intro>p{
+  max-width: 34rem
+}
+.steps{
+  margin-top: 2.5rem
+}
+.steps b{
+  display: inline-block;
+  background: var(--accent);
+  padding: .2rem .6rem;
+  border-radius: .5rem;
+  margin-right: .7rem;
+  font-size: .8rem
+}
+.login{
+  padding: 2.5rem
+}
+.login h2{
+  font-size: 1.7rem
+}
+.login button{
+  width: 100%
+}
+.empty{
+  padding: 3rem;
+  text-align: center
+}
+.pagination{
+  justify-content: center;
+  margin: 2rem
+}
+.table-scroll{
+  overflow: auto
+}
+table{
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left
+}
+caption{
+  text-align: left;
+  margin-bottom: 1rem;
+  color: var(--muted)
+}
+th,td{
+  padding: .8rem;
+  border-bottom: 1px solid var(--line)
+}
+.wrap{
+  overflow-wrap: anywhere
+}
+dialog{
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  max-width: 90vw;
+  padding: 2rem
+}
+dialog: :backdrop{
+  background: #142d2680
+}

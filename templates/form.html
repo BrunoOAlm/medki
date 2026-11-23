@@ -1,3 +1,17 @@
-{% extends 'base.html' %}{% block content %}<div class="page-heading"><div><p class="eyebrow">MEDKI / CADASTRO E ATENDIMENTO</p><h1>{{ title }}</h1>{% if subtitle %}<p>{{ subtitle }}</p>{% endif %}</div></div><section class="panel form-panel">
-{% if invitation_url %}<div class="message success" role="status"><p>Convite criado. Compartilhe este link somente com a pessoa convidada:</p><p class="wrap"><a href="{{ invitation_url }}">{{ invitation_url }}</a></p></div>{% endif %}
-<form method="post" {% if draft %}id="shortage-form" data-draft="yes"{% endif %}>{% csrf_token %}{{ form.as_p }}<div class="actions"><button>{{ button|default:'Salvar' }}</button><a href="{% url 'dashboard' %}">Voltar</a></div></form>{% if draft %}<p class="muted" id="draft-status" role="status">O rascunho fica somente nesta aba e é removido após o envio ou a saída da conta.</p>{% endif %}</section>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">MEDKI / CADASTRO E ATENDIMENTO</p>
+<h1>{{ title }}</h1>{% if subtitle %}<p>{{ subtitle }}</p>{% endif %}</div>
+</div>
+<section class="panel form-panel">
+{% if invitation_url %}<div class="message success" role="status">
+<p>Convite criado. Compartilhe este link somente com a pessoa convidada:</p>
+<p class="wrap">
+<a href="{{ invitation_url }}">{{ invitation_url }}</a>
+</p>
+</div>{% endif %}
+<form method="post" {% if draft %}id="shortage-form" data-draft="yes"{% endif %}>{% csrf_token %}{{ form.as_p }}<div class="actions">
+<button>{{ button|default:'Salvar' }}</button>
+<a href="{% url 'dashboard' %}">Voltar</a>
+</div>
+</form>{% if draft %}<p class="muted" id="draft-status" role="status">O rascunho fica somente nesta aba e é removido após o envio ou a saída da conta.</p>{% endif %}</section>{% endblock %}

@@ -1,0 +1,12 @@
+<header>
+<div class="nav-wrap">
+<a class="brand" href="{% url 'dashboard' %}">
+<span class="brand-icon" aria-hidden="true">✚</span> medki<span class="brand-caption">Cuidado que continua.</span>
+</a>
+{% if user.is_authenticated %}<nav aria-label="Principal">
+<a href="{% url 'dashboard' %}">Notificações</a>
+<a href="{% url 'patients' %}">Pacientes</a>{% if user.role == 'pharmacy' %}<a href="{% url 'report' %}">Indicadores</a>{% endif %}{% if user.responsible %}<a href="{% url 'accounts' %}">Contas</a>
+<a href="{% url 'unit_settings' %}">Prazos</a>{% endif %}</nav>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="subtle" type="submit">Sair</button>
+</form>{% endif %}</div>
+</header>

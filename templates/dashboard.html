@@ -1,5 +1,43 @@
-{% extends 'base.html' %}{% block content %}<div class="page-heading"><div><p class="eyebrow">ACOMPANHAMENTO DO FORNECIMENTO</p><h1>{% if user.role == 'pharmacy' %}Fila de atendimento{% else %}Suas notificações{% endif %}</h1><p>{% if user.role == 'pharmacy' %}Prioridade calculada hoje. Cada registro representa um cuidado a retomar.{% else %}Acompanhe as faltas e cada etapa do atendimento.{% endif %}</p></div>{% if user.role != 'pharmacy' %}<a class="button" href="{% url 'notification_create' %}">+ Registrar falta</a>{% endif %}</div>
-<section class="panel"><form method="get" class="filters"><div><label for="status">Status</label><select name="status" id="status"><option value="open">Em aberto</option><option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>Todos</option>{% for value,label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div><div><label for="category">Categoria</label><select name="category" id="category"><option value="">Todas</option>{% for value,label in categories %}<option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div><div><label for="microarea">Microárea</label><select name="microarea" id="microarea"><option value="">Todas</option>{% for area in areas %}<option value="{{ area.pk }}" {% if request.GET.microarea == area.pk|stringformat:'s' %}selected{% endif %}>{{ area }}</option>{% endfor %}</select></div><div><label for="late">Prazo</label><select name="late" id="late"><option value="">Todos</option><option value="1" {% if request.GET.late == '1' %}selected{% endif %}>Em atraso</option></select></div><button>Filtrar</button></form></section>
-<div class="list-heading"><h2>{{ total }} notificaç{{ total|pluralize:'ão,ões' }}</h2><span class="muted">Maior pontuação · mais antiga primeiro</span></div>
-<div class="notification-list">{% for n in page %}<article class="notification"><div class="score"><strong>{{ n.score }}</strong><span>pontos</span></div><div class="notification-main"><p class="eyebrow">#{{ n.pk }} · {{ n.patient.code }} · {{ n.patient.microarea }}</p><h3><a href="{% url 'detail' n.pk %}">{{ n.supply.name }}</a></h3><p>{{ n.get_category_display }} · Falta desde {{ n.shortage_date|date:'d/m/Y' }}</p></div><div class="notification-side"><span class="badge {{ n.status }}">{{ n.get_status_display }}</span>{% if n.overdue %}<span class="badge late">Em atraso</span>{% endif %}<span class="muted">Aberta em {{ n.opened_at|date:'d/m/Y H:i' }}</span><a href="{% url 'detail' n.pk %}">Ver atendimento →</a></div></article>{% empty %}<div class="panel empty"><h2>Nenhuma notificação por aqui</h2><p>Os registros que você pode acompanhar aparecerão nesta lista.</p></div>{% endfor %}</div>
+{% extends 'base.html' %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">ACOMPANHAMENTO DO FORNECIMENTO</p>
+<h1>{% if user.role == 'pharmacy' %}Fila de atendimento{% else %}Suas notificações{% endif %}</h1>
+<p>{% if user.role == 'pharmacy' %}Prioridade calculada hoje. Cada registro representa um cuidado a retomar.{% else %}Acompanhe as faltas e cada etapa do atendimento.{% endif %}</p>
+</div>{% if user.role != 'pharmacy' %}<a class="button" href="{% url 'notification_create' %}">+ Registrar falta</a>{% endif %}</div>
+<section class="panel">
+<form method="get" class="filters">
+<div>
+<label for="status">Status</label>
+<select name="status" id="status">
+<option value="open">Em aberto</option>
+<option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>Todos</option>{% for value,label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="category">Categoria</label>
+<select name="category" id="category">
+<option value="">Todas</option>{% for value,label in categories %}<option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="microarea">Microárea</label>
+<select name="microarea" id="microarea">
+<option value="">Todas</option>{% for area in areas %}<option value="{{ area.pk }}" {% if request.GET.microarea == area.pk|stringformat:'s' %}selected{% endif %}>{{ area }}</option>{% endfor %}</select>
+</div>
+<div>
+<label for="late">Prazo</label>
+<select name="late" id="late">
+<option value="">Todos</option>
+<option value="1" {% if request.GET.late == '1' %}selected{% endif %}>Em atraso</option>
+</select>
+</div>
+<button>Filtrar</button>
+</form>
+</section>
+<div class="list-heading">
+<h2>{{ total }} notificaç{{ total|pluralize:'ão,ões' }}</h2>
+<span class="muted">Maior pontuação · mais antiga primeiro</span>
+</div>
+<div class="notification-list">{% for n in page %}{% include 'components/notification_card.html' with n=n only %}{% empty %}<div class="panel empty">
+<h2>Nenhuma notificação por aqui</h2>
+<p>Os registros que você pode acompanhar aparecerão nesta lista.</p>
+</div>{% endfor %}</div>
 {% if page.has_other_pages %}<nav class="pagination" aria-label="Páginas">{% if page.has_previous %}<a href="?{{ filters_query }}&page={{ page.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ page.number }} de {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a href="?{{ filters_query }}&page={{ page.next_page_number }}">Próxima</a>{% endif %}</nav>{% endif %}{% endblock %}

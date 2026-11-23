@@ -1,0 +1,8 @@
+{% if user.is_authenticated %}<dialog id="session-warning" aria-labelledby="session-title">
+<h2 id="session-title">Sua sessão vai expirar</h2>
+<p>Você está há quase 30 minutos sem atividade. Deseja continuar?</p>
+<form id="renew-session" method="post" action="{% url 'renew' %}">{% csrf_token %}<button>Continuar conectado</button>
+</form>
+<p id="session-error" role="alert">
+</p>
+</dialog>{% endif %}

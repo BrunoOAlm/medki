@@ -1,5 +1,17 @@
 # Validação observada — 23/11/2026
 
+## Atualização: organização para edição pelo grupo
+
+Após o pedido de facilitar mudanças no frontend e backend, foram extraídos componentes de template, cinco camadas de CSS, módulos JS de rascunho/sessão e módulos Python de consultas/permissões. As rotas, formulários, entidades, regras e serviços públicos usados pelos testes foram preservados.
+
+- `manage.py test --noinput -v 1`: **30 testes passaram em 6,954 segundos**, incluindo fluxo HTTP completo, concorrência e permissões.
+- `manage.py makemigrations --check --dry-run`: **No changes detected**; nenhuma migração nova.
+- `node --check` nos três arquivos JS (`app.js`, `js/draft.js`, `js/session.js`): sem erros de sintaxe. Node foi usado somente para esta verificação, não é necessário para executar o site.
+- Comparação do CSS anterior com a concatenação das cinco camadas, desconsiderando espaços: mesmos seletores, regras, valores e ordem. Esta comparação não substitui uma inspeção visual no navegador.
+- A limitação anterior da ferramenta de navegador permanece. A reorganização foi verificada por renderização de templates nos testes HTTP e checagens estáticas; os módulos JS ainda precisam de ensaio de interação no navegador.
+
+O mapa e os exemplos estão em `GUIA_DE_EDICAO.md`.
+
 Ambiente: Windows, Python 3.12.14, Django 5.2.19, SQLite em arquivo, ReportLab 4.5.1. Repositório local isolado: `Faculdade/medki`, branch `feature/mvp-medki`. Dados exclusivamente fictícios. Consulte o README para instalação reproduzível.
 
 ## Comandos e resultados

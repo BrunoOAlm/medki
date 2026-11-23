@@ -16,7 +16,9 @@ from django.views.decorators.cache import never_cache
 from .forms import AcceptForm, AccountForm, InviteForm, NotificationForm, PatientForm, PeriodForm, SupplyForm, UnitForm
 from .models import Invitation, Link, Microarea, Notification, Supply, User
 from .reports import csv_report, indicators, pdf_report
-from .services import notifications_for, patients_for, queue, register, require_role, transition
+from .permissions import require_role
+from .selectors import notifications_for, patients_for, queue
+from .services import register, transition
 
 
 def form_page(request, form, title, **context):

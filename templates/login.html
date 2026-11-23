@@ -1,1 +1,24 @@
-{% extends 'base.html' %}{% block content %}<div class="login-grid"><section class="intro"><p class="eyebrow">CONTINUIDADE DO CUIDADO</p><h1>Uma falta registrada.<br>Um cuidado acompanhado.</h1><p>Família, agentes de saúde e farmácia conectados para acompanhar o fornecimento de medicamentos e insumos.</p><div class="steps"><p><b>01</b> Registre a falta com segurança</p><p><b>02</b> A unidade organiza o atendimento</p><p><b>03</b> Acompanhe até a entrega</p></div></section><section class="panel login"><p class="eyebrow">BEM-VINDO AO MEDKI</p><h2>Acesse sua conta</h2><p>Entre com o e-mail cadastrado pela sua unidade ou pelo convite do ACS.</p><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button>Entrar</button></form><p class="muted">Ainda não tem acesso? Procure o ACS da sua microárea.</p></section></div>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div class="login-grid">
+<section class="intro">
+<p class="eyebrow">CONTINUIDADE DO CUIDADO</p>
+<h1>Uma falta registrada.<br>Um cuidado acompanhado.</h1>
+<p>Família, agentes de saúde e farmácia conectados para acompanhar o fornecimento de medicamentos e insumos.</p>
+<div class="steps">
+<p>
+<b>01</b> Registre a falta com segurança</p>
+<p>
+<b>02</b> A unidade organiza o atendimento</p>
+<p>
+<b>03</b> Acompanhe até a entrega</p>
+</div>
+</section>
+<section class="panel login">
+<p class="eyebrow">BEM-VINDO AO MEDKI</p>
+<h2>Acesse sua conta</h2>
+<p>Entre com o e-mail cadastrado pela sua unidade ou pelo convite do ACS.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}">
+<button>Entrar</button>
+</form>
+<p class="muted">Ainda não tem acesso? Procure o ACS da sua microárea.</p>
+</section>
+</div>{% endblock %}

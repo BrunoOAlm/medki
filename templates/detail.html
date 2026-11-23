@@ -1,5 +1,56 @@
-{% extends 'base.html' %}{% block content %}<div id="notification-saved" hidden></div><a href="{% url 'dashboard' %}">← Voltar às notificações</a><div class="page-heading"><div><p class="eyebrow">PROTOCOLO #{{ n.pk }} · {{ n.patient.code }}</p><h1>{{ n.supply.name }}</h1><p>{{ n.patient.microarea }} · {{ n.get_category_display }}</p></div><div class="actions"><span class="badge {{ n.status }}">{{ n.get_status_display }}</span>{% if n.overdue %}<span class="badge late">Em atraso</span>{% endif %}</div></div>
-<div class="detail-grid"><section class="panel"><h2>Dados da falta</h2><dl><dt>Paciente</dt><dd>{{ n.patient }}</dd><dt>Falta desde</dt><dd>{{ n.shortage_date|date:'d/m/Y' }}</dd><dt>Aberta em</dt><dd>{{ n.opened_at|date:'d/m/Y H:i' }}</dd><dt>Primeira resposta até</dt><dd>{{ n.response_due|date:'d/m/Y H:i' }}</dd><dt>Entrega até</dt><dd>{{ n.delivery_due|date:'d/m/Y H:i' }}</dd><dt>Prioridade hoje</dt><dd>{{ n.priority }} pontos</dd><dt>Observação</dt><dd>{{ n.note|default:'Sem observação' }}</dd></dl>
-{% if user.role == 'pharmacy' and n.is_open %}<h2>Atendimento</h2><form method="post" action="{% url 'change_status' n.pk %}">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}"><button name="action" value="advance">{{ next_label }}</button></form>{% if n.status == 'shipping' %}<form method="post" action="{% url 'change_status' n.pk %}" class="secondary-form">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}"><label for="failed-reason">Motivo da tentativa sem sucesso</label><textarea id="failed-reason" name="reason" maxlength="500" required></textarea><button name="action" value="failed" class="subtle">Registrar tentativa sem sucesso</button></form>{% endif %}{% endif %}
-{% if can_cancel %}<form method="post" action="{% url 'change_status' n.pk %}" class="secondary-form">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}"><label for="cancel-reason">Motivo do cancelamento{% if user.role == 'notifier' %} (opcional){% endif %}</label><textarea id="cancel-reason" name="reason" maxlength="500" {% if user.role == 'pharmacy' %}required{% endif %}></textarea><p class="muted">Use somente informações necessárias. Não inclua dados identificadores diretos.</p><button name="action" value="cancel" class="danger">Cancelar notificação</button></form>{% endif %}</section>
-<section class="panel"><p class="eyebrow">RASTREABILIDADE</p><h2>Histórico do atendimento</h2><ol class="timeline">{% for h in history %}<li><strong>{% if h.previous_status %}{{ h.get_previous_status_display }} → {% endif %}{{ h.get_status_display }}</strong><p>{{ h.created_at|date:'d/m/Y H:i:s' }} · {{ h.author.get_role_display }}</p>{% if h.reason %}<p>{{ h.reason }}</p>{% endif %}</li>{% endfor %}</ol><p class="muted">Registros permanentes, com horário do servidor.</p></section></div>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div id="notification-saved" hidden>
+</div>
+<a href="{% url 'dashboard' %}">← Voltar às notificações</a>
+<div class="page-heading">
+<div>
+<p class="eyebrow">PROTOCOLO #{{ n.pk }} · {{ n.patient.code }}</p>
+<h1>{{ n.supply.name }}</h1>
+<p>{{ n.patient.microarea }} · {{ n.get_category_display }}</p>
+</div>
+<div class="actions">
+<span class="badge {{ n.status }}">{{ n.get_status_display }}</span>{% if n.overdue %}<span class="badge late">Em atraso</span>{% endif %}</div>
+</div>
+<div class="detail-grid">
+<section class="panel">
+<h2>Dados da falta</h2>
+<dl>
+<dt>Paciente</dt>
+<dd>{{ n.patient }}</dd>
+<dt>Falta desde</dt>
+<dd>{{ n.shortage_date|date:'d/m/Y' }}</dd>
+<dt>Aberta em</dt>
+<dd>{{ n.opened_at|date:'d/m/Y H:i' }}</dd>
+<dt>Primeira resposta até</dt>
+<dd>{{ n.response_due|date:'d/m/Y H:i' }}</dd>
+<dt>Entrega até</dt>
+<dd>{{ n.delivery_due|date:'d/m/Y H:i' }}</dd>
+<dt>Prioridade hoje</dt>
+<dd>{{ n.priority }} pontos</dd>
+<dt>Observação</dt>
+<dd>{{ n.note|default:'Sem observação' }}</dd>
+</dl>
+{% if user.role == 'pharmacy' and n.is_open %}<h2>Atendimento</h2>
+<form method="post" action="{% url 'change_status' n.pk %}">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}">
+<button name="action" value="advance">{{ next_label }}</button>
+</form>{% if n.status == 'shipping' %}<form method="post" action="{% url 'change_status' n.pk %}" class="secondary-form">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}">
+<label for="failed-reason">Motivo da tentativa sem sucesso</label>
+<textarea id="failed-reason" name="reason" maxlength="500" required>
+</textarea>
+<button name="action" value="failed" class="subtle">Registrar tentativa sem sucesso</button>
+</form>{% endif %}{% endif %}
+{% if can_cancel %}<form method="post" action="{% url 'change_status' n.pk %}" class="secondary-form">{% csrf_token %}<input type="hidden" name="expected" value="{{ n.status }}">
+<label for="cancel-reason">Motivo do cancelamento{% if user.role == 'notifier' %} (opcional){% endif %}</label>
+<textarea id="cancel-reason" name="reason" maxlength="500" {% if user.role == 'pharmacy' %}required{% endif %}>
+</textarea>
+<p class="muted">Use somente informações necessárias. Não inclua dados identificadores diretos.</p>
+<button name="action" value="cancel" class="danger">Cancelar notificação</button>
+</form>{% endif %}</section>
+<section class="panel">
+<p class="eyebrow">RASTREABILIDADE</p>
+<h2>Histórico do atendimento</h2>
+<ol class="timeline">{% for h in history %}<li>
+<strong>{% if h.previous_status %}{{ h.get_previous_status_display }} → {% endif %}{{ h.get_status_display }}</strong>
+<p>{{ h.created_at|date:'d/m/Y H:i:s' }} · {{ h.author.get_role_display }}</p>{% if h.reason %}<p>{{ h.reason }}</p>{% endif %}</li>{% endfor %}</ol>
+<p class="muted">Registros permanentes, com horário do servidor.</p>
+</section>
+</div>{% endblock %}

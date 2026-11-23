@@ -1,36 +1,15 @@
+"""Transactional use cases; templates and views must not reproduce these rules."""
 from datetime import datetime, timedelta
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, transaction
-from django.db.models import Count, Q, Prefetch
 from django.utils import timezone
 
-from .models import History, Notification, Patient, Supply, User
-
-OPEN = ['pending', 'picking', 'shipping']
-
-
-def patients_for(user):
-    qs = Patient.objects.select_related('microarea__unit').prefetch_related('supplies')
-    if not user.is_active:
-        return qs.none()
-    if user.role == User.Role.NOTIFIER:
-        return qs.filter(notifiers=user)
-    if user.role == User.Role.ACS:
-        return qs.filter(microarea_id=user.microarea_id, microarea__unit_id=user.unit_id)
-    if user.role == User.Role.PHARMACY:
-        return qs.filter(microarea__unit_id=user.unit_id)
-    return qs.none()
-
-
-def notifications_for(user):
-    patients = Patient.objects.annotate(medication_count=Count('supplies', filter=Q(supplies__medication=True)))
-    return Notification.objects.filter(patient__in=patients_for(user)).select_related('supply', 'author').prefetch_related(Prefetch('patient', queryset=patients.select_related('microarea__unit')))
-
-
-def require_role(user, *roles):
-    if not user.is_active or user.role not in roles:
-        raise PermissionDenied
+from .constants import OPEN_STATUSES
+from .models import History, Notification, User
+from .permissions import require_role
+# Compatibility exports preserve existing callers of the MVP service module.
+from .selectors import notifications_for, patients_for, queue
 
 
 def deadline(opened, days, business=False):
@@ -62,7 +41,7 @@ def register(user, patient, supply, shortage_date, note=''):
             History.objects.create(notification=n, author=user, status=n.status, reason='Abertura da notificação')
         return n, True
     except IntegrityError:
-        existing = notifications_for(user).filter(patient=patient, supply=supply, status__in=OPEN).first()
+        existing = notifications_for(user).filter(patient=patient, supply=supply, status__in=OPEN_STATUSES).first()
         if existing:
             return existing, False
         raise
@@ -92,7 +71,7 @@ def transition(user, pk, action, reason='', expected=None):
             if not reason.strip():
                 raise ValidationError('Informe o motivo da tentativa sem sucesso.')
             n.status = 'pending'
-        elif action == 'advance' and old in OPEN:
+        elif action == 'advance' and old in OPEN_STATUSES:
             n.status = {'pending': 'picking', 'picking': 'shipping', 'shipping': 'delivered'}[old]
         else:
             raise ValidationError('Transição não permitida.')
@@ -106,23 +85,3 @@ def transition(user, pk, action, reason='', expected=None):
     n.save(update_fields=['status', 'first_response_at', 'closed_at'])
     History.objects.create(notification=n, author=user, previous_status=old, status=n.status, reason=reason.strip())
     return n
-
-
-def queue(user, filters):
-    qs = notifications_for(user)
-    status = filters.get('status', 'open')
-    if status == 'open':
-        qs = qs.filter(status__in=OPEN)
-    elif status in Notification.Status.values:
-        qs = qs.filter(status=status)
-    if filters.get('category') in Supply.Category.values:
-        qs = qs.filter(category=filters['category'])
-    area = filters.get('microarea', '')
-    if area.isdigit():
-        qs = qs.filter(patient__microarea_id=int(area))
-    rows = list(qs)
-    for n in rows:
-        n.score = n.priority()
-    if filters.get('late') == '1':
-        rows = [n for n in rows if n.overdue]
-    return sorted(rows, key=lambda n: (-n.score, n.opened_at, n.pk))

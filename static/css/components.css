@@ -1,0 +1,238 @@
+.panel{
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: .9rem;
+  padding: 1.6rem
+}
+.form-panel{
+  max-width: 720px
+}
+.form-panel p{
+  margin-bottom: 1.3rem
+}
+label{
+  display: block;
+  font-weight: 650;
+  font-size: .9rem;
+  margin-bottom: .4rem
+}
+input,select,textarea{
+  padding: .7rem;
+  border: 1px solid #899d94;
+  border-radius: .4rem;
+  background: white;
+  color: var(--ink);
+  width: 100%;
+  min-height: 44px
+}
+input[type=checkbox]{
+  width: auto;
+  min-height: auto
+}
+textarea{
+  resize: vertical
+}
+select[multiple]{
+  min-height: 9rem
+}
+.helptext,.muted{
+  color: var(--muted);
+  font-size: .85rem
+}
+.helptext{
+  display: block;
+  margin-top: .35rem
+}
+.errorlist{
+  color: #8d2028;
+  padding-left: 1.2rem;
+  font-weight: 600
+}
+.message{
+  padding: 1rem 1.3rem;
+  border: 1px solid #9eada7;
+  border-radius: .6rem;
+  margin-bottom: 1.5rem;
+  background: #fff5df
+}
+.message.success{
+  background: #e3f0e8;
+  border-color: #8eaf9d
+}
+.message.error{
+  background: #fff0ed;
+  border-color: #a84f48
+}
+.actions{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap
+}
+.filters{
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: end
+}
+.filters>div,.filters>p{
+  flex: 1;
+  min-width: 150px;
+  margin: 0
+}
+.filters button{
+  align-self: end
+}
+.list-heading{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.6rem 0 .8rem
+}
+.notification-list{
+  display: grid;
+  gap: .8rem
+}
+.notification{
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: white;
+  padding: 1.5rem;
+  border-radius: .8rem
+}
+.score{
+  min-width: 64px;
+  align-self: stretch;
+  border-right: 1px solid var(--line);
+  padding-right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center
+}
+.score strong{
+  font-size: 2rem;
+  line-height: 1
+}
+.score span{
+  font-size: .7rem;
+  color: var(--muted)
+}
+.notification-main{
+  flex: 1
+}
+.notification-main h3{
+  margin: .35rem 0;
+  font-size: 1.2rem
+}
+.notification-main p{
+  margin: .3rem 0;
+  font-size: .82rem
+}
+.notification-main h3 a{
+  text-decoration: none
+}
+.notification-main h3 a:hover{
+  text-decoration: underline
+}
+.notification-side{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .45rem;
+  font-size: .85rem
+}
+.badge{
+  display: inline-block;
+  border: 1px solid #abc1b3;
+  border-radius: 2rem;
+  padding: .25rem .75rem;
+  font-size: .78rem;
+  font-weight: 650;
+  background: #edf4ee;
+  white-space: nowrap
+}
+.badge.pending{
+  background: #faf1d9;
+  color: #71520c;
+  border-color: #d4bd7c
+}
+.badge.shipping{
+  background: #e6edf7;
+  color: #244f7e;
+  border-color: #b1c4dc
+}
+.badge.cancelled{
+  background: #f1e9ea;
+  color: #78313a;
+  border-color: #d8acb3
+}
+.badge.late{
+  background: #fff0e9;
+  color: #96300d;
+  border-color: #e1af99
+}
+.cards,.metrics{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr));
+  gap: 1rem;
+  margin-top: 1.5rem
+}
+.metrics strong{
+  display: block;
+  font-size: 2.4rem;
+  margin-top: .5rem
+}
+.metrics small{
+  font-size: .9rem
+}
+.detail-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem
+}
+.timeline{
+  list-style: none;
+  padding: 0
+}
+.timeline li{
+  border-left: 2px solid #b7d2c2;
+  padding: 0 0 1.5rem 1.2rem
+}
+.timeline li p{
+  font-size: .85rem;
+  margin: .4rem 0
+}
+.secondary-form{
+  margin-top: 1.8rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--line)
+}
+.secondary-form button{
+  margin-top: .7rem
+}
+dl{
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: .65rem
+}
+dt{
+  color: var(--muted);
+  font-size: .85rem
+}
+dd{
+  margin: 0;
+  overflow-wrap: anywhere
+}
+footer{
+  max-width: 1240px;
+  margin: auto;
+  border-top: 1px solid var(--line);
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  font-size: .75rem;
+  color: var(--muted)
+}

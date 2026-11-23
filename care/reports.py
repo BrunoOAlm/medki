@@ -11,7 +11,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 
-from .services import notifications_for
+from .selectors import notifications_for
 
 
 def indicators(user, start, end):

@@ -1,1 +1,28 @@
-{% extends 'base.html' %}{% block content %}<div class="page-heading"><div><p class="eyebrow">GESTÃO DA UNIDADE</p><h1>Contas profissionais</h1></div><a class="button" href="{% url 'account_create' %}">+ Criar conta</a></div><section class="panel table-scroll"><table><caption>ACS e Farmácia da sua unidade</caption><thead><tr><th>E-mail</th><th>Perfil</th><th>Microárea</th><th>Situação</th><th>Ação</th></tr></thead><tbody>{% for account in accounts %}<tr><td>{{ account.email }}</td><td>{{ account.get_role_display }}</td><td>{{ account.microarea|default:'—' }}</td><td>{{ account.is_active|yesno:'Ativa,Desativada' }}</td><td>{% if not account.responsible %}<a href="{% url 'account_edit' account.pk %}">Editar</a>{% else %}Responsável{% endif %}</td></tr>{% endfor %}</tbody></table></section>{% endblock %}
+{% extends 'base.html' %}{% block content %}<div class="page-heading">
+<div>
+<p class="eyebrow">GESTÃO DA UNIDADE</p>
+<h1>Contas profissionais</h1>
+</div>
+<a class="button" href="{% url 'account_create' %}">+ Criar conta</a>
+</div>
+<section class="panel table-scroll">
+<table>
+<caption>ACS e Farmácia da sua unidade</caption>
+<thead>
+<tr>
+<th>E-mail</th>
+<th>Perfil</th>
+<th>Microárea</th>
+<th>Situação</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody>{% for account in accounts %}<tr>
+<td>{{ account.email }}</td>
+<td>{{ account.get_role_display }}</td>
+<td>{{ account.microarea|default:'—' }}</td>
+<td>{{ account.is_active|yesno:'Ativa,Desativada' }}</td>
+<td>{% if not account.responsible %}<a href="{% url 'account_edit' account.pk %}">Editar</a>{% else %}Responsável{% endif %}</td>
+</tr>{% endfor %}</tbody>
+</table>
+</section>{% endblock %}

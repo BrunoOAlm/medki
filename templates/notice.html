@@ -1,1 +1,5 @@
-{% extends 'base.html' %}{% block content %}<section class="panel form-panel"><h1>{{ title }}</h1><p>{{ text }}</p><a href="{% url 'dashboard' %}">Ir para o início</a></section>{% endblock %}
+{% extends 'base.html' %}{% block content %}<section class="panel form-panel">
+<h1>{{ title }}</h1>
+<p>{{ text }}</p>
+<a href="{% url 'dashboard' %}">Ir para o início</a>
+</section>{% endblock %}
