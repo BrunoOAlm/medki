@@ -2,14 +2,6 @@
 
 MVP web acadêmico para registrar faltas de medicamentos e outros insumos, organizar a fila da unidade de saúde e acompanhar o atendimento. **Use somente dados fictícios.** Django 5.2 LTS, templates, SQLite e ReportLab; sem serviço externo obrigatório.
 
-## Editar frontend e backend
-
-O projeto foi organizado para edição pelo grupo: telas e componentes em `templates/`, estilos por responsabilidade em `static/css/`, módulos de interação em `static/js/`, consultas em `care/selectors.py`, permissões em `care/permissions.py` e operações de negócio em `care/services.py`. O backend continua responsável por autorização e integridade, mesmo quando o visual mudar.
-
-Veja o [guia de edição](docs/GUIA_DE_EDICAO.md), com mapa de arquivos, exemplos e contratos que devem ser preservados. A stack continua Django com templates; não requer build de frontend nem banco novo.
-
-A [pesquisa e revisão do frontend](docs/PESQUISA_FRONTEND.md) registra fontes multilíngues, padrões encontrados e alternativas aplicadas. A interface prioriza acesso direto, fila tabular e dados de atendimento, com limitações de validação visual explicitadas.
-
 ## Rodar localmente
 
 Requer Python **3.12+**, Git e acesso ao PyPI na instalação. Execute na pasta deste repositório.
