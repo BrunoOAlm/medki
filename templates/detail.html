@@ -1,11 +1,10 @@
 {% extends 'base.html' %}{% block content %}<div id="notification-saved" hidden>
 </div>
-<a href="{% url 'dashboard' %}">← Voltar às notificações</a>
+<a href="{% url 'dashboard' %}">Voltar às notificações</a>
 <div class="page-heading">
 <div>
-<p class="eyebrow">PROTOCOLO #{{ n.pk }} · {{ n.patient.code }}</p>
 <h1>{{ n.supply.name }}</h1>
-<p>{{ n.patient.microarea }} · {{ n.get_category_display }}</p>
+<p>Notificação #{{ n.pk }} · {{ n.patient.code }} · {{ n.patient.microarea }} · {{ n.get_category_display }}</p>
 </div>
 <div class="actions">
 <span class="badge {{ n.status }}">{{ n.get_status_display }}</span>{% if n.overdue %}<span class="badge late">Em atraso</span>{% endif %}</div>
@@ -46,7 +45,6 @@
 <button name="action" value="cancel" class="danger">Cancelar notificação</button>
 </form>{% endif %}</section>
 <section class="panel">
-<p class="eyebrow">RASTREABILIDADE</p>
 <h2>Histórico do atendimento</h2>
 <ol class="timeline">{% for h in history %}<li>
 <strong>{% if h.previous_status %}{{ h.get_previous_status_display }} → {% endif %}{{ h.get_status_display }}</strong>

@@ -1,44 +1,44 @@
-{% extends 'base.html' %}{% block content %}<div class="page-heading">
-<div>
-<p class="eyebrow">DADOS PARA ORGANIZAR O CUIDADO</p>
-<h1>Indicadores da unidade</h1>
-<p>Coorte: notificações abertas no período selecionado. Recorrência: 90 dias até a data final.</p>
+{% extends 'base.html' %}
+{% block title %}Indicadores | Medki{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><h1>Indicadores da unidade</h1><p>Consulte as notificações abertas no período. A recorrência considera os 90 dias até a data final.</p></div>
 </div>
-</div>
-<section class="panel">
-<form method="get" class="filters">{{ form.as_p }}<button>Consultar</button>{% if data %}<button name="format" value="csv" class="subtle">Exportar CSV</button>
-<button name="format" value="pdf" class="subtle">Exportar PDF</button>{% endif %}</form>
-</section>{% if data %}<div class="metrics">
-<section class="panel">
-<span>Notificações no período</span>
-<strong>{{ data.total }}</strong>
+<section class="filter-bar" aria-label="Período dos indicadores">
+  <form method="get" class="filters">
+    {{ form.as_p }}
+    <button>Consultar</button>
+    {% if data %}<button name="format" value="csv" class="subtle">Exportar CSV</button><button name="format" value="pdf" class="subtle">Exportar PDF</button>{% endif %}
+  </form>
 </section>
-<section class="panel">
-<span>Tempo médio até a entrega</span>
-<strong>{{ data.average|default_if_none:'—' }} <small>dias</small>
-</strong>
-</section>
-<section class="panel">
-<span>Entregas em até 7 dias</span>
-<strong>{{ data.on_time|default_if_none:'—' }}<small>%</small>
-</strong>
-</section>
-</div>
+{% if data %}
+<h2>Resumo do período</h2>
+<dl class="summary-facts">
+  <div><dt>Notificações</dt><dd>{{ data.total }}</dd></div>
+  <div><dt>Tempo médio até a entrega</dt><dd>{{ data.average|default_if_none:'Sem entregas' }}{% if data.average != None %} dias{% endif %}</dd></div>
+  <div><dt>Entregas em até 7 dias</dt><dd>{{ data.on_time|default_if_none:'Sem entregas' }}{% if data.on_time != None %}%{% endif %}</dd></div>
+</dl>
 <p class="muted">Média e percentual consideram {{ data.delivered }} entrega{{ data.delivered|pluralize }}. Sem entregas, o indicador fica sem valor.</p>
-<div class="cards">
-<section class="panel">
-<h2>Faltas por insumo</h2>
-<ul>{% for name,count in data.supplies %}<li>{{ name }}: <b>{{ count }}</b>
-</li>{% empty %}<li>Sem registros</li>{% endfor %}</ul>
+<section class="report-section">
+  <table>
+    <caption>Faltas por insumo</caption>
+    <thead><tr><th scope="col">Insumo</th><th scope="col" class="number">Notificações</th></tr></thead>
+    <tbody>{% for name,count in data.supplies %}<tr><th scope="row">{{ name }}</th><td class="number">{{ count }}</td></tr>{% empty %}<tr><td colspan="2">Nenhuma falta no período.</td></tr>{% endfor %}</tbody>
+  </table>
 </section>
-<section class="panel">
-<h2>Faltas por microárea</h2>
-<ul>{% for name,count in data.areas %}<li>{{ name }}: <b>{{ count }}</b>
-</li>{% empty %}<li>Sem registros</li>{% endfor %}</ul>
+<section class="report-section">
+  <table>
+    <caption>Faltas por microárea</caption>
+    <thead><tr><th scope="col">Microárea</th><th scope="col" class="number">Notificações</th></tr></thead>
+    <tbody>{% for name,count in data.areas %}<tr><th scope="row">{{ name }}</th><td class="number">{{ count }}</td></tr>{% empty %}<tr><td colspan="2">Nenhuma falta no período.</td></tr>{% endfor %}</tbody>
+  </table>
 </section>
-<section class="panel">
-<h2>Recorrência em 90 dias</h2>
-<p>{{ data.window_start|date:'d/m/Y' }} a {{ data.end|date:'d/m/Y' }}</p>
-<ul>{% for code,count in data.recurrence %}<li>{{ code }}: <b>{{ count }}</b> falta{{ count|pluralize }}</li>{% empty %}<li>Sem registros</li>{% endfor %}</ul>
+<section class="report-section">
+  <table>
+    <caption>Recorrência por paciente <span class="caption-note">{{ data.window_start|date:'d/m/Y' }} a {{ data.end|date:'d/m/Y' }}</span></caption>
+    <thead><tr><th scope="col">Paciente / microárea</th><th scope="col" class="number">Faltas em 90 dias</th></tr></thead>
+    <tbody>{% for code,count in data.recurrence %}<tr><th scope="row">{{ code }}</th><td class="number">{{ count }}</td></tr>{% empty %}<tr><td colspan="2">Nenhuma falta nos últimos 90 dias.</td></tr>{% endfor %}</tbody>
+  </table>
 </section>
-</div>{% endif %}{% endblock %}
+{% endif %}
+{% endblock %}

@@ -1,5 +1,19 @@
 # Validação observada — 23/11/2026
 
+## Atualização: revisão dos padrões visuais
+
+Pesquisa multilíngue, diagnóstico e decisões estão em `PESQUISA_FRONTEND.md`. O frontend foi ajustado para tarefas de atendimento: login direto, fila em tabela, pacientes em registros e indicadores em resumo/tabelas. RNF01 (responsividade), RNF02 (acessibilidade) e RNF03 (usabilidade) orientaram a mudança; não houve alteração em RN01–RN09, permissões, dados ou regras de atendimento.
+
+- `manage.py test --noinput -v 1`: **30 testes passaram em 6,835 segundos**, incluindo o fluxo completo e concorrência.
+- `manage.py makemigrations --check --dry-run`: **No changes detected**.
+- Cliente HTTP do Django + `html.parser` em 11 combinações de página/perfil (login, fila/pacientes nos três perfis, falta para ACS/Notificante e indicadores/contas da Farmácia): **HTTP 200, um H1, IDs únicos e rótulos associados aos campos**.
+- Cálculo WCAG por luminância sRGB dos tokens e fundos especificados: texto principal/branco **12,66:1**, secundário/branco **6,37:1**, botão branco/verde **6,97:1**, Pendente/branco **7,21:1**, Saiu para entrega/branco **8,42:1**, atraso/branco **7,71:1**, secundário/fundo da tabela **5,80:1**. São verificações de pares definidos no CSS, não uma auditoria de todas as combinações e estados renderizados.
+- Detector Impeccable em `templates` e `static/css`: **`[]`**, sem achados mecânicos. Não se declara qualidade estética certificada nem detecção de autoria humana.
+- `git diff --check`: sem erros de whitespace.
+- **Desktop/mobile visual não verificado:** inventário CUA sem navegador controlável; janela disponível era gerenciador de senhas, que não foi automatizado. Rolagem horizontal da tabela no celular, zoom e leitor de tela ainda precisam de ensaio real. Não foram produzidas screenshots nem se declara que esses ensaios passaram.
+
+A atualização opcional do Impeccable foi autorizada por Cadu. `npx --yes impeccable update` não reconheceu a instalação antiga; `npx --yes impeccable install --providers=codex --scope=global` instalou **4.10.0** no diretório gerenciado e seus hooks. A cópia antiga foi arquivada em `.evidence/impeccable-4.0.4-backup`, ignorada pelo Git. A sessão usou as instruções carregadas antes da atualização; novas sessões usarão a instalação gerenciada. Essa instalação não é dependência de execução do Medki.
+
 ## Atualização: organização para edição pelo grupo
 
 Após o pedido de facilitar mudanças no frontend e backend, foram extraídos componentes de template, cinco camadas de CSS, módulos JS de rascunho/sessão e módulos Python de consultas/permissões. As rotas, formulários, entidades, regras e serviços públicos usados pelos testes foram preservados.

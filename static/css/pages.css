@@ -1,70 +1,23 @@
-.login-grid{
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 5rem;
-  align-items: center;
-  padding: 3rem 0
-}
-.intro h1{
-  font-size: clamp(2.5rem,4vw,3.8rem)
-}
-.intro>p{
-  max-width: 34rem
-}
-.steps{
-  margin-top: 2.5rem
-}
-.steps b{
-  display: inline-block;
-  background: var(--accent);
-  padding: .2rem .6rem;
-  border-radius: .5rem;
-  margin-right: .7rem;
-  font-size: .8rem
-}
-.login{
-  padding: 2.5rem
-}
-.login h2{
-  font-size: 1.7rem
-}
-.login button{
-  width: 100%
-}
-.empty{
-  padding: 3rem;
-  text-align: center
-}
-.pagination{
-  justify-content: center;
-  margin: 2rem
-}
-.table-scroll{
-  overflow: auto
-}
-table{
-  border-collapse: collapse;
-  width: 100%;
-  text-align: left
-}
-caption{
-  text-align: left;
-  margin-bottom: 1rem;
-  color: var(--muted)
-}
-th,td{
-  padding: .8rem;
-  border-bottom: 1px solid var(--line)
-}
-.wrap{
-  overflow-wrap: anywhere
-}
-dialog{
-  border: 1px solid var(--line);
-  border-radius: 1rem;
-  max-width: 90vw;
-  padding: 2rem
-}
-dialog: :backdrop{
-  background: #142d2680
-}
+/* Login is an access task, with help next to the form. */
+.access-layout { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 320px); justify-content: center; align-items: start; gap: 4rem; padding: 3rem 0; }
+.access-form > p { color: var(--muted); }
+.access-form form { margin-top: 1.75rem; }
+.access-form form > p { margin: 0 0 1.25rem; }
+.access-form button { min-width: 120px; }
+.access-help { padding-left: 2rem; border-left: 1px solid var(--line); }
+.access-help h2 { margin-top: 0; }
+.access-help p { margin-top: .4rem; }
+.access-help h3:not(:first-child) { margin-top: 1.5rem; }
+.pagination { justify-content: flex-start; margin: 1.5rem 0; }
+.summary-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.summary-facts dt { margin-bottom: .5rem; font-size: .875rem; }
+.summary-facts dd { font-size: 1.35rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.report-section { max-width: 900px; margin-top: 2.5rem; }
+.patient-register { border-top: 1px solid var(--line); }
+.patient-record { display: grid; grid-template-columns: minmax(140px, .8fr) minmax(0, 1.5fr) minmax(180px, .8fr); align-items: start; gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+.patient-record h2, .patient-record h3 { margin: 0 0 .5rem; }
+.patient-record p { margin: 0; color: var(--muted); }
+.patient-action { justify-self: end; padding: .5rem 0; }
+.item-list { margin: 0; padding-left: 1.25rem; }
+.item-list li + li { margin-top: .4rem; }
+.scroll-hint { display: none; }

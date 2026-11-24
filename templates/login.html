@@ -1,24 +1,23 @@
-{% extends 'base.html' %}{% block content %}<div class="login-grid">
-<section class="intro">
-<p class="eyebrow">CONTINUIDADE DO CUIDADO</p>
-<h1>Uma falta registrada.<br>Um cuidado acompanhado.</h1>
-<p>Família, agentes de saúde e farmácia conectados para acompanhar o fornecimento de medicamentos e insumos.</p>
-<div class="steps">
-<p>
-<b>01</b> Registre a falta com segurança</p>
-<p>
-<b>02</b> A unidade organiza o atendimento</p>
-<p>
-<b>03</b> Acompanhe até a entrega</p>
+{% extends 'base.html' %}
+{% block title %}Entrar | Medki{% endblock %}
+{% block content %}
+<div class="access-layout">
+  <section class="access-form" aria-labelledby="access-title">
+    <h1 id="access-title">Entrar no Medki</h1>
+    <p>Use o e-mail da sua conta para registrar faltas e consultar o atendimento.</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit">Entrar</button>
+    </form>
+  </section>
+  <aside class="access-help" aria-labelledby="access-help-title">
+    <h2 id="access-help-title">Precisa de acesso?</h2>
+    <h3>Familiar ou cuidador</h3>
+    <p>Peça um convite ao ACS responsável pelo paciente. Se já recebeu o link, abra-o para confirmar o vínculo.</p>
+    <h3>ACS ou Farmácia</h3>
+    <p>O farmacêutico responsável pela unidade cadastra as contas da equipe.</p>
+  </aside>
 </div>
-</section>
-<section class="panel login">
-<p class="eyebrow">BEM-VINDO AO MEDKI</p>
-<h2>Acesse sua conta</h2>
-<p>Entre com o e-mail cadastrado pela sua unidade ou pelo convite do ACS.</p>
-<form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}">
-<button>Entrar</button>
-</form>
-<p class="muted">Ainda não tem acesso? Procure o ACS da sua microárea.</p>
-</section>
-</div>{% endblock %}
+{% endblock %}

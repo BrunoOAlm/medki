@@ -1,10 +1,9 @@
 {% extends 'base.html' %}{% block content %}<div class="page-heading">
 <div>
-<p class="eyebrow">ACOMPANHAMENTO DO FORNECIMENTO</p>
 <h1>{% if user.role == 'pharmacy' %}Fila de atendimento{% else %}Suas notificações{% endif %}</h1>
-<p>{% if user.role == 'pharmacy' %}Prioridade calculada hoje. Cada registro representa um cuidado a retomar.{% else %}Acompanhe as faltas e cada etapa do atendimento.{% endif %}</p>
-</div>{% if user.role != 'pharmacy' %}<a class="button" href="{% url 'notification_create' %}">+ Registrar falta</a>{% endif %}</div>
-<section class="panel">
+<p>{% if user.role == 'pharmacy' %}Atenda pela pontuação. Em caso de empate, a notificação mais antiga vem primeiro.{% else %}Consulte as faltas dos pacientes vinculados ao seu acesso.{% endif %}</p>
+</div>{% if user.role != 'pharmacy' %}<a class="button" href="{% url 'notification_create' %}">Registrar falta</a>{% endif %}</div>
+<section class="filter-bar" aria-label="Filtros de notificações">
 <form method="get" class="filters">
 <div>
 <label for="status">Status</label>
@@ -34,10 +33,21 @@
 </section>
 <div class="list-heading">
 <h2>{{ total }} notificaç{{ total|pluralize:'ão,ões' }}</h2>
-<span class="muted">Maior pontuação · mais antiga primeiro</span>
+<span class="muted">Pontuação atualizada pela data de hoje</span>
 </div>
-<div class="notification-list">{% for n in page %}{% include 'components/notification_card.html' with n=n only %}{% empty %}<div class="panel empty">
-<h2>Nenhuma notificação por aqui</h2>
-<p>Os registros que você pode acompanhar aparecerão nesta lista.</p>
-</div>{% endfor %}</div>
+{% if page %}
+<p class="scroll-hint" id="queue-scroll-help">Em telas pequenas, deslize a tabela para consultar todas as colunas.</p>
+<div class="table-scroll" role="region" aria-label="Notificações ordenadas por prioridade" aria-describedby="queue-scroll-help" tabindex="0">
+  <table class="notification-table">
+    <caption class="visually-hidden">Notificações, da maior prioridade para a menor</caption>
+    <thead><tr><th scope="col">Prioridade</th><th scope="col">Paciente</th><th scope="col">Insumo</th><th scope="col">Datas</th><th scope="col">Situação</th><th scope="col">Atendimento</th></tr></thead>
+    <tbody>{% for n in page %}{% include 'components/notification_row.html' with n=n only %}{% endfor %}</tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+  <h2>Nenhuma notificação nesta consulta</h2>
+  <p>Confira os filtros selecionados. Novas faltas aparecerão aqui após o registro.</p>
+</div>
+{% endif %}
 {% if page.has_other_pages %}<nav class="pagination" aria-label="Páginas">{% if page.has_previous %}<a href="?{{ filters_query }}&page={{ page.previous_page_number }}">Anterior</a>{% endif %}<span>Página {{ page.number }} de {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a href="?{{ filters_query }}&page={{ page.next_page_number }}">Próxima</a>{% endif %}</nav>{% endif %}{% endblock %}

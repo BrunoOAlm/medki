@@ -1,10 +1,12 @@
-:root{
-  --ink: #183b36;
+/* Cores funcionais: identidade, leitura, limites e avisos. */
+:root {
+  --ink: #23372f;
   --green: #17654f;
   --dark: #0b4938;
-  --muted: #516560;
-  --line: #d5dfda;
-  --paper: #f6f8f5;
-  --white: #fff;
-  --accent: #e4efbb
+  --muted: #52635b;
+  --line: #ccd5cf;
+  --paper: #ffffff;
+  --white: #ffffff;
+  --surface: #f2f5f2;
+  --danger: #922d30;
 }

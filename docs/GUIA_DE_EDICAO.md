@@ -8,11 +8,11 @@ O Medki usa um projeto Django com camadas separadas. Frontend e backend ficam no
 | --- | --- | --- |
 | Cores do sistema | `static/css/theme.css` | Variáveis de cores compartilhadas |
 | Tipografia, navegação e estrutura geral | `static/css/base.css` | Estilos fundamentais |
-| Botões, campos, cartões, filtros, tabelas e badges | `static/css/components.css` | Componentes visuais compartilhados |
+| Botões, campos, filtros, tabelas e status | `static/css/components.css` | Componentes visuais compartilhados |
 | Tela de acesso | `static/css/pages.css`, `templates/login.html` | Apresentação específica da página |
 | Comportamento em celular | `static/css/responsive.css` | Regras de largura de tela e movimento reduzido |
 | Cabeçalho, rodapé, mensagens ou aviso de sessão | `templates/components/` | Trechos reutilizados pelo layout base |
-| Cartão de uma notificação | `templates/components/notification_card.html` | Recebe a variável `n` da fila |
+| Linha de uma notificação | `templates/components/notification_row.html` | Recebe a variável `n` da fila; conserva os cabeçalhos da tabela |
 | Conteúdo de uma tela | `templates/*.html` | HTML e apresentação dos dados enviados pela view |
 | Rascunho e avisos de conexão | `static/js/draft.js` | Interações no navegador, sem decidir autorização |
 | Aviso e renovação de sessão | `static/js/session.js` | Interações com a sessão do servidor |
@@ -33,7 +33,9 @@ Os estilos são carregados nesta ordem: **theme → base → components → page
 
 ## Exemplo: mudar somente o visual
 
-Para trocar a cor principal, edite `--green` e `--dark` em `theme.css`, mantendo contraste adequado. Para mudar o cartão, edite `notification_card.html` e as regras `.notification` em `components.css`. Nenhuma migração é necessária.
+Para trocar a cor principal, edite `--green` e `--dark` em `theme.css`, mantendo contraste adequado. Para mudar a fila, edite `notification_row.html` e as regras `.notification-table` em `components.css`. Preserve cabeçalhos, rótulos de status e a região de rolagem por teclado. Nenhuma migração é necessária.
+
+A apresentação atual prioriza o trabalho de atendimento: acesso direto, registro tabular de notificações, pacientes em linhas e indicadores em resumo/tabelas. Evite reintroduzir slogans, rótulos decorativos sobre títulos ou transformar cada informação em um cartão. A [pesquisa de padrões visuais](PESQUISA_FRONTEND.md) explica as fontes, o diagnóstico e os limites dessa escolha.
 
 Toda página estende `base.html`. Ela pode definir `title`, `content`, `extra_css` e `extra_js`. Por exemplo, para adicionar um CSS específico sem alterar o layout das outras telas:
 

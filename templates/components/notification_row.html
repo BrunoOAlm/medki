@@ -1,0 +1,8 @@
+<tr>
+  <td class="priority-value">{{ n.score }} <span class="muted">pontos</span></td>
+  <td><strong>{{ n.patient.code }}</strong><span class="cell-note">{{ n.patient.microarea }}</span></td>
+  <th scope="row"><a href="{% url 'detail' n.pk %}">{{ n.supply.name }}</a><span class="cell-note">{{ n.get_category_display }} · #{{ n.pk }}</span></th>
+  <td><span class="date-line">Falta: {{ n.shortage_date|date:'d/m/Y' }}</span><span class="cell-note">Abertura: {{ n.opened_at|date:'d/m/Y H:i' }}</span></td>
+  <td><span class="status-label {{ n.status }}">{{ n.get_status_display }}</span>{% if n.overdue %}<strong class="late-label">Em atraso</strong>{% endif %}</td>
+  <td><a class="row-action" href="{% url 'detail' n.pk %}" aria-label="Abrir atendimento {{ n.pk }} do paciente {{ n.patient.code }}">Abrir</a></td>
+</tr>

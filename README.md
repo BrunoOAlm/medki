@@ -8,6 +8,8 @@ O projeto foi organizado para edição pelo grupo: telas e componentes em `templ
 
 Veja o [guia de edição](docs/GUIA_DE_EDICAO.md), com mapa de arquivos, exemplos e contratos que devem ser preservados. A stack continua Django com templates; não requer build de frontend nem banco novo.
 
+A [pesquisa e revisão do frontend](docs/PESQUISA_FRONTEND.md) registra fontes multilíngues, padrões encontrados e alternativas aplicadas. A interface prioriza acesso direto, fila tabular e dados de atendimento, com limitações de validação visual explicitadas.
+
 ## Rodar localmente
 
 Requer Python **3.12+**, Git e acesso ao PyPI na instalação. Execute na pasta deste repositório.
