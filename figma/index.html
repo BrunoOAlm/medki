@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedKi — Remédio entregue em casa, com acompanhamento</title>
+  <meta name="description" content="MedKi: entrega domiciliar de medicamentos e insumos de uso contínuo. Se a entrega falhar, a família ou o Agente Comunitário de Saúde avisa a farmácia da unidade.">
+  <link rel="preload" href="../assets/img/mao-figma.webp" as="image">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-pagina="inicio">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- HERO (recriação do Figma) -->
+  <section class="hero" aria-labelledby="hero-t">
+    <header id="nav"></header>
+    <div class="hero__palco">
+      <div class="hero__txt">
+        <h1 class="hero__titulo" id="hero-t">Saúde entregue na sua porta, com confiança</h1>
+        <p class="hero__sub"><strong>Medicamentos e insumos de uso contínuo</strong> entregues por quem entende de <strong>saúde</strong>.</p>
+        <button class="hero__btn" type="button" data-abre-explorar aria-haspopup="dialog">Explorar mais</button>
+      </div>
+      <div class="hero__arte" aria-hidden="true">
+        <img class="hero__mao" src="../assets/img/mao-figma.webp" alt="" width="1586" height="1719">
+        <div class="hero__marca">MedkI</div>
+      </div>
+    </div>
+  </section>
+
+  <main id="conteudo">
+    <!-- Receba seu medicamento em casa (Figma) -->
+    <section class="wrap receba" id="receba" aria-labelledby="receba-t">
+      <h2 class="receba__titulo rv" id="receba-t">Receba seu medicamento em casa</h2>
+      <div class="receba__grade">
+        <article class="receba__card rv">
+          <div class="receba__foto"><img src="../assets/img/cuidadora.jpg" alt="Cuidadora sorrindo ao lado de uma senhora idosa" loading="lazy"></div>
+          <h3>Avise a falta</h3>
+          <p>Acabou o remédio ou a entrega não chegou? <b>A família avisa em poucos toques.</b></p>
+        </article>
+        <article class="receba__card rv">
+          <div class="receba__foto"><img src="../assets/img/acs-visita.jpg" alt="Agente Comunitário de Saúde medindo a pressão de um senhor em casa" loading="lazy"></div>
+          <h3>Agente Comunitário de Saúde</h3>
+          <p>Cadastra o paciente e também <b>avisa a falta durante a visita.</b></p>
+        </article>
+        <article class="receba__card rv">
+          <div class="receba__foto"><img src="../assets/img/farmacia.jpg" alt="Farmacêutico atendendo uma paciente" loading="lazy"></div>
+          <h3>A farmácia entrega</h3>
+          <p>A farmácia da unidade atende <b>por prioridade</b> e leva até a sua porta.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Vantagens -->
+    <div class="wrap">
+      <ul class="vantagens" aria-label="Vantagens do MedKi">
+        <li class="vantagem vantagem--1 rv"><b>Gratuito</b><span>sem custo para o paciente e a família</span></li>
+        <li class="vantagem vantagem--2 rv"><b>Direto no celular</b><span>sem instalar nenhum aplicativo</span></li>
+        <li class="vantagem vantagem--3 rv"><b>Dados protegidos</b><span>só código e iniciais do paciente</span></li>
+        <li class="vantagem vantagem--4 rv"><b>Em 3 passos</b><span>para avisar a falta de um remédio</span></li>
+      </ul>
+    </div>
+
+    <!-- Como funciona (cards numerados) -->
+    <section class="secao" id="como" aria-labelledby="como-t">
+      <div class="wrap">
+        <div class="cab7 rv">
+          <span class="cab7__ilus" aria-hidden="true"><i></i><i></i></span>
+          <div><h2 class="titulo t-lg" id="como-t">Do aviso à <span class="destaque">entrega</span></h2><p class="sub">Simples para quem avisa e organizado para quem entrega.</p></div>
+        </div>
+        <div class="grade7">
+          <article class="c7 rv"><span class="c7__num">01</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="9" width="28" height="19" rx="2"/><path d="M2 32h33l-2 3H4z"/><rect x="31" y="15" width="12" height="23" rx="2"/><path d="M35.5 34.5h3M10 15h10M10 19h14M10 23h7"/></svg><h3>Avise a falta</h3><p>Escolha o paciente, o remédio e a data. <b>São só três telas.</b></p></article>
+          <article class="c7 rv"><span class="c7__num">02</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14V8a2 2 0 0 1 2-2h6M34 6h6a2 2 0 0 1 2 2v6M42 34v6a2 2 0 0 1-2 2h-6M14 42H8a2 2 0 0 1-2-2v-6"/><rect x="14" y="14" width="8" height="8" rx="1"/><rect x="26" y="14" width="8" height="8" rx="1"/><rect x="14" y="26" width="8" height="8" rx="1"/><path d="M26 26h3v3M34 26v8h-8"/></svg><h3>A prioridade é calculada</h3><p>Quem está <b>há mais tempo sem o remédio</b> é atendido primeiro.</p></article>
+          <article class="c7 rv"><span class="c7__num">03</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="40" height="27" rx="2"/><path d="M18 42h12M24 34v8M14 14h3l3 10h10l3-7H18"/><circle cx="21" cy="28" r="1.3"/><circle cx="29" cy="28" r="1.3"/></svg><h3>Receba em casa</h3><p>A farmácia separa, envia e você <b>acompanha cada etapa.</b></p></article>
+          <article class="c7 c7--escuro rv"><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14a2 2 0 0 1 2-2h10l4 4h18a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M24 34V22M19 27l5-5 5 5"/></svg><h3>Comece agora a acompanhar</h3><p>Entre com a sua conta ou crie a sua com o convite recebido.</p><div class="c7__acoes"><a class="btn btn-branco btn-sm" href="../paginas/entrar.html">Entrar</a><a class="btn btn-vidro btn-sm" href="../paginas/entrar.html?criar=1">Criar conta</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Por que o MedKi -->
+    <section class="secao faixa-destaque" aria-labelledby="porque-t">
+      <div class="wrap porque">
+        <div>
+          <div class="secao-cab secao-cab--esq rv" style="margin-bottom:0"><span class="olho">Por que o MedKi</span><h2 class="titulo t-lg" id="porque-t">Para o tratamento <span class="destaque">não parar</span></h2></div>
+          <div class="porque__lista">
+            <div class="porque__item porque__item--1 rv"><h3>Quem mais precisa, primeiro</h3><p>Insulina e anti-hipertensivo têm <b>peso maior</b>, e cada dia sem o remédio soma pontos.</p></div>
+            <div class="porque__item porque__item--2 rv"><h3>Prazos claros</h3><p>Primeira resposta em até <b>2 dias úteis</b> e entrega em até <b>7 dias</b>. Passou disso, o aviso fica marcado em atraso.</p></div>
+            <div class="porque__item porque__item--3 rv"><h3>Histórico completo</h3><p>Cada mudança fica registrada com <b>data, hora e responsável.</b></p></div>
+          </div>
+        </div>
+        <div class="porque__foto rv-zoom"><img src="../assets/img/entrega.jpg" alt="Entrega de uma caixa de medicamentos na porta de casa" loading="lazy"></div>
+      </div>
+    </section>
+
+    <!-- Bloco SUS -->
+    <section class="secao" aria-labelledby="sus-t">
+      <div class="wrap">
+        <div class="bloco-sus rv">
+          <div>
+            <h2 id="sus-t">Um serviço em <b>convênio com o SUS</b></h2>
+            <p>Os remédios e insumos são <b>os mesmos da farmácia da sua unidade básica de saúde</b>. O MedKi só organiza o aviso e a entrega, para que ninguém fique sem tratamento. <b>Não há custo</b> para o paciente nem para a família.</p>
+          </div>
+          <button class="btn btn-marinho" type="button" data-abre-explorar aria-haspopup="dialog">Entender como funciona</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perfis -->
+    <section class="secao" id="perfis" aria-labelledby="perfis-t" style="padding-top:0">
+      <div class="wrap">
+        <div class="secao-cab rv"><span class="olho">Quem usa</span><h2 class="titulo t-lg" id="perfis-t">Um lugar para <span class="destaque">cada função</span></h2></div>
+        <div class="promos">
+          <article class="promo promo--1 rv"><small>Familiar ou cuidador</small><h3>O remédio acabou? <b>Avise agora</b></h3><p>Registre a falta e acompanhe a entrega pelo celular.</p><a class="btn btn-marinho btn-sm" href="../paginas/entrar.html">Avisar falta</a><img class="promo__pessoa" src="../assets/img/pessoa-familiar.webp" alt="" loading="lazy"></article>
+          <article class="promo promo--2 rv"><small>Agente Comunitário de Saúde</small><h3>Cuide da sua <b>microárea</b></h3><p>Cadastre pacientes, vincule familiares e avise na visita.</p><a class="btn btn-marinho btn-sm" href="../paginas/entrar.html">Entrar</a><img class="promo__pessoa" src="../assets/img/pessoa-acs.webp" alt="" loading="lazy"></article>
+          <article class="promo promo--3 rv"><small>Farmácia da unidade</small><h3>Fila por <b>prioridade</b> e indicadores</h3><p>Atualize o status com um clique e exporte relatórios.</p><a class="btn btn-branco btn-sm" href="../paginas/entrar.html">Entrar</a><img class="promo__pessoa" src="../assets/img/pessoa-farmacia.webp" alt="" loading="lazy"></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Números -->
+    <section class="secao faixa-destaque" aria-labelledby="num-t">
+      <div class="wrap">
+        <div class="secao-cab rv"><span class="olho">Por que isso importa</span><h2 class="titulo t-lg" id="num-t">Quando o remédio falta, <span class="destaque">ninguém fica sabendo</span></h2></div>
+        <div class="numeros">
+          <div class="numero numero--1 rv"><b><span data-conta="52.9" data-casas="1" data-sufixo="%">0%</span></b><p>é a disponibilidade média de <b>medicamentos essenciais</b> na atenção primária. A meta da OMS é 80%.</p><cite>Nascimento et al., 2017</cite></div>
+          <div class="numero numero--2 rv"><b><span data-conta="75.6" data-casas="1" data-sufixo="%">0%</span></b><p>dos usuários <b>não recebem orientação</b> quando o medicamento falta na unidade.</p><cite>Nascimento et al., 2017</cite></div>
+          <div class="numero numero--3 rv"><b><span data-conta="29.4" data-casas="1" data-sufixo="%">0%</span></b><p>é a disponibilidade do tratamento completo para quem usa <b>cinco ou mais remédios.</b></p><cite>Oliveira et al., 2016</cite></div>
+          <div class="numero numero--4 rv"><b><span data-conta="2002" data-casas="0">0</span></b><p>é o ano de criação do programa <b>Remédio em Casa</b> no Rio de Janeiro.</p><cite>Simões; Monteiro, 2006</cite></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prioridade -->
+    <section class="secao" aria-labelledby="prio-t">
+      <div class="wrap destaque-grade">
+        <div class="destaque-grade__foto rv-zoom"><img src="../assets/img/consulta.jpg" alt="Profissional de saúde atendendo um paciente idoso" loading="lazy"></div>
+        <div class="rv">
+          <span class="olho">Fila de prioridade</span>
+          <h2 class="titulo t-lg" id="prio-t" style="margin-top:10px">Quem mais precisa é <span class="destaque">atendido primeiro</span></h2>
+          <p class="sub" style="margin-top:14px">A farmácia não atende por ordem de chegada. A pontuação de cada aviso é <b>recalculada todo dia.</b></p>
+          <ul class="lista-ok">
+            <li><span><b>Insulina soma 5 pontos</b>, anti-hipertensivo 3, fralda geriátrica 2 e outros insumos 1</span></li>
+            <li><span>Cada dia sem o insumo soma <b>mais 1 ponto</b></span></li>
+            <li><span>Quem usa 5 ou mais remédios de uso contínuo ganha <b>mais 2 pontos</b></span></li>
+          </ul>
+          <a class="btn btn-marinho" href="../paginas/como-funciona.html#prioridade" style="margin-top:28px">Simular a prioridade</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="secao faixa-destaque" id="faq" aria-labelledby="faq-t">
+      <div class="wrap">
+        <div class="secao-cab rv"><span class="olho">Dúvidas frequentes</span><h2 class="titulo t-lg" id="faq-t">Perguntas que <span class="destaque">recebemos</span></h2></div>
+        <div class="faq">
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f1">Preciso pagar alguma coisa?</button><div class="faq__r" id="f1" role="region"><p>Não. O MedKi é <b>gratuito para o paciente e a família</b>. Os medicamentos são os mesmos da farmácia da sua unidade básica de saúde.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f2">Quem pode avisar a falta de um remédio?</button><div class="faq__r" id="f2" role="region"><p>O familiar ou cuidador vinculado ao paciente e o próprio <b>Agente Comunitário de Saúde</b>. O idoso não precisa usar o sistema.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f3">Como crio minha conta?</button><div class="faq__r" id="f3" role="region"><p>Fale com o <b>Agente Comunitário de Saúde</b> da sua microárea. Ele cadastra o paciente e envia um código de convite para você criar sua conta.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f4">Posso avisar a mesma falta duas vezes?</button><div class="faq__r" id="f4" role="region"><p>Não precisa. Se já existe um aviso em aberto para o mesmo paciente e o mesmo insumo, <b>o MedKi mostra o aviso existente</b> e você acompanha por ele.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f5">E se a entrega não acontecer?</button><div class="faq__r" id="f5" role="region"><p>A farmácia registra a tentativa sem sucesso e o aviso <b>volta para a fila</b>, com a prioridade mantida.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f6">Posso cancelar um aviso?</button><div class="faq__r" id="f6" role="region"><p>Sim, <b>enquanto ele estiver Pendente</b>, por exemplo quando o remédio chegou por outro meio.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chamada final -->
+    <section class="secao" aria-labelledby="cta-t">
+      <div class="wrap">
+        <div class="cta rv">
+          <div>
+            <h2 class="titulo t-lg" id="cta-t">O tratamento não pode esperar</h2>
+            <p class="sub">Se o remédio de uso contínuo acabou ou não chegou, <b style="color:#fff">avise agora</b>. A farmácia da sua unidade fica sabendo na hora.</p>
+            <div class="cta__acoes"><a class="btn btn-marinho" href="../paginas/entrar.html">Entrar no MedKi</a><a class="btn btn-vidro" href="../paginas/entrar.html?criar=1">Criar conta</a></div>
+          </div>
+          <div class="cta__foto"><img src="../assets/img/familia.jpg" alt="Cuidadora ajudando uma senhora idosa a caminhar" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="rodape"></footer>
+
+  <!-- Explorar mais: convênio SUS → como funciona → entrar ou criar conta -->
+  <div class="explorar" id="explorar" role="dialog" aria-modal="true" aria-labelledby="ex-t1" hidden>
+    <div class="explorar__fundo" data-fecha-explorar></div>
+    <div class="explorar__caixa">
+      <button class="explorar__fechar" type="button" aria-label="Fechar" data-fecha-explorar>✕</button>
+      <div class="explorar__pontos" aria-hidden="true"><i class="is-on"></i><i></i><i></i></div>
+      <div class="explorar__trilho">
+        <section class="explorar__slide is-on" aria-labelledby="ex-t1">
+          <span class="explorar__selo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></span>
+          <h2 id="ex-t1">O MedKi é um <b>convênio com o SUS</b></h2>
+          <p>Os remédios e insumos de uso contínuo são <b>os mesmos da farmácia da sua unidade básica de saúde</b>, entregues em casa para quem tem dificuldade de ir buscar.</p>
+          <ul class="explorar__chips"><li><b>Gratuito</b> para o paciente</li><li>Ligado à sua <b>unidade de saúde</b></li><li>Para <b>uso contínuo</b></li></ul>
+        </section>
+        <section class="explorar__slide" aria-labelledby="ex-t2">
+          <h2 id="ex-t2">Se a entrega falhar, <b>você avisa</b></h2>
+          <ol class="explorar__lista">
+            <li><span>1</span><p><b>A família ou o Agente Comunitário de Saúde</b> avisa a falta em poucos toques.</p></li>
+            <li><span>2</span><p><b>A farmácia da unidade</b> recebe o aviso numa fila por prioridade.</p></li>
+            <li><span>3</span><p><b>Você acompanha</b> cada etapa até o remédio chegar em casa.</p></li>
+          </ol>
+        </section>
+        <section class="explorar__slide" aria-labelledby="ex-t3">
+          <h2 id="ex-t3">Como você quer <b>continuar?</b></h2>
+          <div class="explorar__opcoes">
+            <a class="explorar__opcao explorar__opcao--1" href="../paginas/entrar.html"><b>Entrar</b><span>Já tenho conta no MedKi</span></a>
+            <a class="explorar__opcao explorar__opcao--2" href="../paginas/entrar.html?criar=1"><b>Criar conta</b><span>Recebi o convite do <b>Agente Comunitário de Saúde</b></span></a>
+          </div>
+        </section>
+      </div>
+      <div class="explorar__nav"><button class="btn btn-linha btn-sm" type="button" data-ex="-1">Voltar</button><button class="btn btn-marinho btn-sm" type="button" data-ex="1">Continuar</button></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/site.js"></script>
+  <script>
+    (function () {
+      var box = document.getElementById("explorar"), slides = box.querySelectorAll(".explorar__slide"), pontos = box.querySelectorAll(".explorar__pontos i"), i = 0, antes = null;
+      var voltar = box.querySelector('[data-ex="-1"]'), seguir = box.querySelector('[data-ex="1"]');
+      function vai(n) {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach(function (s, k) { s.classList.toggle("is-on", k === i); s.classList.toggle("is-antes", k < i); s.setAttribute("aria-hidden", String(k !== i)); });
+        pontos.forEach(function (p, k) { p.classList.toggle("is-on", k <= i); });
+        voltar.style.visibility = i ? "visible" : "hidden"; seguir.style.display = i === slides.length - 1 ? "none" : "";
+        box.setAttribute("aria-labelledby", "ex-t" + (i + 1));
+      }
+      function abre() { antes = document.activeElement; box.hidden = false; document.body.style.overflow = "hidden"; vai(0); requestAnimationFrame(function () { box.classList.add("is-on"); seguir.focus(); }); }
+      function fecha() { box.classList.remove("is-on"); document.body.style.overflow = ""; setTimeout(function () { box.hidden = true; }, 350); if (antes) antes.focus(); }
+      document.querySelectorAll("[data-abre-explorar]").forEach(function (b) { b.addEventListener("click", abre); });
+      box.addEventListener("click", function (e) { if (e.target.closest("[data-fecha-explorar]")) fecha(); var b = e.target.closest("[data-ex]"); if (b) vai(i + +b.dataset.ex); });
+      document.addEventListener("keydown", function (e) { if (box.hidden) return; if (e.key === "Escape") fecha(); if (e.key === "ArrowRight") vai(i + 1); if (e.key === "ArrowLeft") vai(i - 1); });
+    })();
+  </script>
+</body>
+</html>
