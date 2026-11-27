@@ -30,9 +30,9 @@
 
   function rodape() {
     return '<div class="wrap"><div class="rodape__grade">' +
-      '<div><p class="rodape__logo">MedKi</p><p style="margin-top:14px;max-width:340px">Remédios e insumos de uso contínuo entregues em casa, com acompanhamento de cada etapa. <b style="color:#fff">Gratuito para o paciente.</b></p></div>' +
+      '<div><p class="rodape__logo">MedKi</p><p style="margin-top:14px;max-width:340px">Aviso de falta de remédios e insumos de uso contínuo, com acompanhamento de cada etapa. <b style="color:#fff">Gratuito para o paciente</b></p></div>' +
       '<div><h3>Navegação</h3><ul>' + LINKS.map(function (l) { return '<li><a href="' + l[0] + '">' + l[1] + "</a></li>"; }).join("") + "</ul></div>" +
-      '<div><h3>Acesso</h3><ul><li><a href="' + P("entrar.html") + '">Entrar no MedKi</a></li><li><a href="' + P("entrar.html?criar=1") + '">Criar conta</a></li><li><a href="' + P("ajuda.html#perfis") + '">Guia para familiares</a></li><li><a href="' + P("ajuda.html#perfis") + '">Guia para o <b style="color:#fff">Agente Comunitário de Saúde</b></a></li></ul></div>' +
+      '<div><h3>Acesso</h3><ul><li><a href="' + P("entrar.html") + '">Entrar no MedKi</a></li><li><a href="' + P("entrar.html?criar=1") + '">Tenho um convite</a></li><li><a href="' + P("ajuda.html#perfis") + '">Guia para familiares</a></li><li><a href="' + P("ajuda.html#perfis") + '">Guia para o <b style="color:#fff">Agente Comunitário de Saúde</b></a></li></ul></div>' +
       '<div><h3>Atendimento</h3><ul><li><a href="' + P("contato.html") + '">Fale com a equipe</a></li><li><a href="' + P("ajuda.html") + '">Central de ajuda</a></li><li><a href="' + P("privacidade.html") + '">Privacidade (LGPD)</a></li></ul></div></div>' +
       '<div class="rodape__base"><span>© 2026 MedKi · Projeto acadêmico FAETERJ-Rio</span><span>Não substitui orientação médica. Em emergência, ligue 192.</span></div></div>';
   }

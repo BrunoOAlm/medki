@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MedKi — Remédio entregue em casa, com acompanhamento</title>
-  <meta name="description" content="MedKi: entrega domiciliar de medicamentos e insumos de uso contínuo. Se a entrega falhar, a família ou o Agente Comunitário de Saúde avisa a farmácia da unidade.">
+  <title>MedKi — Aviso de falta de remédio de uso contínuo</title>
+  <meta name="description" content="Quando o remédio de uso contínuo de um idoso acamado acaba ou não chega, a família ou o Agente Comunitário de Saúde avisa a farmácia da unidade, que atende por prioridade.">
   <link rel="preload" href="../assets/img/mao-figma.webp" as="image">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/site.css">
@@ -17,9 +17,9 @@
     <header id="nav"></header>
     <div class="hero__palco">
       <div class="hero__txt">
-        <h1 class="hero__titulo" id="hero-t">Saúde entregue na sua porta, com confiança</h1>
-        <p class="hero__sub"><strong>Medicamentos e insumos de uso contínuo</strong> entregues por quem entende de <strong>saúde</strong>.</p>
-        <button class="hero__btn" type="button" data-abre-explorar aria-haspopup="dialog">Explorar mais</button>
+        <h1 class="hero__titulo" id="hero-t">Quando o remédio não chega, a farmácia fica sabendo</h1>
+        <p class="hero__sub">Familiares e agentes de saúde avisam a falta de remédios e insumos de uso contínuo. A farmácia da unidade atende por prioridade</p>
+        <button class="hero__btn" type="button" data-abre-explorar aria-haspopup="dialog">Como funciona</button>
       </div>
       <div class="hero__arte" aria-hidden="true">
         <img class="hero__mao" src="../assets/img/mao-figma.webp" alt="" width="1586" height="1719">
@@ -29,24 +29,24 @@
   </section>
 
   <main id="conteudo">
-    <!-- Receba seu medicamento em casa (Figma) -->
+    <!-- Quem participa (Figma) -->
     <section class="wrap receba" id="receba" aria-labelledby="receba-t">
-      <h2 class="receba__titulo rv" id="receba-t">Receba seu medicamento em casa</h2>
+      <h2 class="receba__titulo rv" id="receba-t">Três pessoas, um aviso</h2>
       <div class="receba__grade">
         <article class="receba__card rv">
           <div class="receba__foto"><img src="../assets/img/cuidadora.jpg" alt="Cuidadora sorrindo ao lado de uma senhora idosa" loading="lazy"></div>
-          <h3>Avise a falta</h3>
-          <p>Acabou o remédio ou a entrega não chegou? <b>A família avisa em poucos toques.</b></p>
+          <h3>A família avisa</h3>
+          <p>Acabou o remédio ou a entrega não chegou? <b>O familiar ou cuidador registra a falta pelo celular.</b></p>
         </article>
         <article class="receba__card rv">
           <div class="receba__foto"><img src="../assets/img/acs-visita.jpg" alt="Agente Comunitário de Saúde medindo a pressão de um senhor em casa" loading="lazy"></div>
-          <h3>Agente Comunitário de Saúde</h3>
+          <h3>O agente de saúde acompanha</h3>
           <p>Cadastra o paciente e também <b>avisa a falta durante a visita.</b></p>
         </article>
         <article class="receba__card rv">
           <div class="receba__foto"><img src="../assets/img/farmacia.jpg" alt="Farmacêutico atendendo uma paciente" loading="lazy"></div>
-          <h3>A farmácia entrega</h3>
-          <p>A farmácia da unidade atende <b>por prioridade</b> e leva até a sua porta.</p>
+          <h3>A farmácia atende</h3>
+          <p>A farmácia da unidade recebe o aviso numa <b>fila por prioridade</b> e atualiza cada etapa.</p>
         </article>
       </div>
     </section>
@@ -66,13 +66,13 @@
       <div class="wrap">
         <div class="cab7 rv">
           <span class="cab7__ilus" aria-hidden="true"><i></i><i></i></span>
-          <div><h2 class="titulo t-lg" id="como-t">Do aviso à <span class="destaque">entrega</span></h2><p class="sub">Simples para quem avisa e organizado para quem entrega.</p></div>
+          <div><h2 class="titulo t-lg" id="como-t">Do aviso ao <span class="destaque">remédio em casa</span></h2><p class="sub">Simples para quem avisa e organizado para quem entrega.</p></div>
         </div>
         <div class="grade7">
           <article class="c7 rv"><span class="c7__num">01</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="9" width="28" height="19" rx="2"/><path d="M2 32h33l-2 3H4z"/><rect x="31" y="15" width="12" height="23" rx="2"/><path d="M35.5 34.5h3M10 15h10M10 19h14M10 23h7"/></svg><h3>Avise a falta</h3><p>Escolha o paciente, o remédio e a data. <b>São só três telas.</b></p></article>
           <article class="c7 rv"><span class="c7__num">02</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14V8a2 2 0 0 1 2-2h6M34 6h6a2 2 0 0 1 2 2v6M42 34v6a2 2 0 0 1-2 2h-6M14 42H8a2 2 0 0 1-2-2v-6"/><rect x="14" y="14" width="8" height="8" rx="1"/><rect x="26" y="14" width="8" height="8" rx="1"/><rect x="14" y="26" width="8" height="8" rx="1"/><path d="M26 26h3v3M34 26v8h-8"/></svg><h3>A prioridade é calculada</h3><p>Quem está <b>há mais tempo sem o remédio</b> é atendido primeiro.</p></article>
-          <article class="c7 rv"><span class="c7__num">03</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="40" height="27" rx="2"/><path d="M18 42h12M24 34v8M14 14h3l3 10h10l3-7H18"/><circle cx="21" cy="28" r="1.3"/><circle cx="29" cy="28" r="1.3"/></svg><h3>Receba em casa</h3><p>A farmácia separa, envia e você <b>acompanha cada etapa.</b></p></article>
-          <article class="c7 c7--escuro rv"><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14a2 2 0 0 1 2-2h10l4 4h18a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M24 34V22M19 27l5-5 5 5"/></svg><h3>Comece agora a acompanhar</h3><p>Entre com a sua conta ou crie a sua com o convite recebido.</p><div class="c7__acoes"><a class="btn btn-branco btn-sm" href="../paginas/entrar.html">Entrar</a><a class="btn btn-vidro btn-sm" href="../paginas/entrar.html?criar=1">Criar conta</a></div></article>
+          <article class="c7 rv"><span class="c7__num">03</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="40" height="27" rx="2"/><path d="M18 42h12M24 34v8M14 14h3l3 10h10l3-7H18"/><circle cx="21" cy="28" r="1.3"/><circle cx="29" cy="28" r="1.3"/></svg><h3>Acompanhe cada etapa</h3><p>Em separação, saiu para entrega, entregue. <b>Você vê o status mudar.</b></p></article>
+          <article class="c7 c7--escuro rv"><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14a2 2 0 0 1 2-2h10l4 4h18a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M24 34V22M19 27l5-5 5 5"/></svg><h3>Já recebeu o convite?</h3><p>O agente de saúde envia o convite. Com ele, você cria sua conta</p><div class="c7__acoes"><a class="btn btn-branco btn-sm" href="../paginas/entrar.html">Entrar</a><a class="btn btn-vidro btn-sm" href="../paginas/entrar.html?criar=1">Tenho um convite</a></div></article>
         </div>
       </div>
     </section>
@@ -97,8 +97,8 @@
       <div class="wrap">
         <div class="bloco-sus rv">
           <div>
-            <h2 id="sus-t">Um serviço em <b>convênio com o SUS</b></h2>
-            <p>Os remédios e insumos são <b>os mesmos da farmácia da sua unidade básica de saúde</b>. O MedKi só organiza o aviso e a entrega, para que ninguém fique sem tratamento. <b>Não há custo</b> para o paciente nem para a família.</p>
+            <h2 id="sus-t">Junto da <b>farmácia da sua unidade</b></h2>
+            <p>A entrega em casa continua sendo do programa da sua cidade, como o Remédio em Casa no Rio. O MedKi não substitui esse programa: ele registra quando a entrega falha e mostra o andamento para a família. <b>Não há custo</b> para o paciente nem para a família.</p>
           </div>
           <button class="btn btn-marinho" type="button" data-abre-explorar aria-haspopup="dialog">Entender como funciona</button>
         </div>
@@ -110,7 +110,7 @@
       <div class="wrap">
         <div class="secao-cab rv"><span class="olho">Quem usa</span><h2 class="titulo t-lg" id="perfis-t">Um lugar para <span class="destaque">cada função</span></h2></div>
         <div class="promos">
-          <article class="promo promo--1 rv"><small>Familiar ou cuidador</small><h3>O remédio acabou? <b>Avise agora</b></h3><p>Registre a falta e acompanhe a entrega pelo celular.</p><a class="btn btn-marinho btn-sm" href="../paginas/entrar.html">Avisar falta</a><img class="promo__pessoa" src="../assets/img/pessoa-familiar.webp" alt="" loading="lazy"></article>
+          <article class="promo promo--1 rv"><small>Familiar ou cuidador</small><h3>O remédio acabou? <b>Avise agora</b></h3><p>Registre a falta e acompanhe o atendimento pelo celular.</p><a class="btn btn-marinho btn-sm" href="../paginas/entrar.html">Avisar falta</a><img class="promo__pessoa" src="../assets/img/pessoa-familiar.webp" alt="" loading="lazy"></article>
           <article class="promo promo--2 rv"><small>Agente Comunitário de Saúde</small><h3>Cuide da sua <b>microárea</b></h3><p>Cadastre pacientes, vincule familiares e avise na visita.</p><a class="btn btn-marinho btn-sm" href="../paginas/entrar.html">Entrar</a><img class="promo__pessoa" src="../assets/img/pessoa-acs.webp" alt="" loading="lazy"></article>
           <article class="promo promo--3 rv"><small>Farmácia da unidade</small><h3>Fila por <b>prioridade</b> e indicadores</h3><p>Atualize o status com um clique e exporte relatórios.</p><a class="btn btn-branco btn-sm" href="../paginas/entrar.html">Entrar</a><img class="promo__pessoa" src="../assets/img/pessoa-farmacia.webp" alt="" loading="lazy"></article>
         </div>
@@ -155,9 +155,9 @@
         <div class="faq">
           <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f1">Preciso pagar alguma coisa?</button><div class="faq__r" id="f1" role="region"><p>Não. O MedKi é <b>gratuito para o paciente e a família</b>. Os medicamentos são os mesmos da farmácia da sua unidade básica de saúde.</p></div></div>
           <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f2">Quem pode avisar a falta de um remédio?</button><div class="faq__r" id="f2" role="region"><p>O familiar ou cuidador vinculado ao paciente e o próprio <b>Agente Comunitário de Saúde</b>. O idoso não precisa usar o sistema.</p></div></div>
-          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f3">Como crio minha conta?</button><div class="faq__r" id="f3" role="region"><p>Fale com o <b>Agente Comunitário de Saúde</b> da sua microárea. Ele cadastra o paciente e envia um código de convite para você criar sua conta.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f3">Como crio minha conta?</button><div class="faq__r" id="f3" role="region"><p>Fale com o <b>Agente Comunitário de Saúde</b> da sua microárea. Ele cadastra o paciente e envia um convite, por e-mail ou link, para você criar sua conta.</p></div></div>
           <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f4">Posso avisar a mesma falta duas vezes?</button><div class="faq__r" id="f4" role="region"><p>Não precisa. Se já existe um aviso em aberto para o mesmo paciente e o mesmo insumo, <b>o MedKi mostra o aviso existente</b> e você acompanha por ele.</p></div></div>
-          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f5">E se a entrega não acontecer?</button><div class="faq__r" id="f5" role="region"><p>A farmácia registra a tentativa sem sucesso e o aviso <b>volta para a fila</b>, com a prioridade mantida.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f5">E se a entrega não acontecer?</button><div class="faq__r" id="f5" role="region"><p>A farmácia registra a tentativa sem sucesso e o aviso <b>volta para a fila</b> como Pendente. Os dias sem o remédio continuam contando na prioridade.</p></div></div>
           <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="f6">Posso cancelar um aviso?</button><div class="faq__r" id="f6" role="region"><p>Sim, <b>enquanto ele estiver Pendente</b>, por exemplo quando o remédio chegou por outro meio.</p></div></div>
         </div>
       </div>
@@ -170,7 +170,7 @@
           <div>
             <h2 class="titulo t-lg" id="cta-t">O tratamento não pode esperar</h2>
             <p class="sub">Se o remédio de uso contínuo acabou ou não chegou, <b style="color:#fff">avise agora</b>. A farmácia da sua unidade fica sabendo na hora.</p>
-            <div class="cta__acoes"><a class="btn btn-marinho" href="../paginas/entrar.html">Entrar no MedKi</a><a class="btn btn-vidro" href="../paginas/entrar.html?criar=1">Criar conta</a></div>
+            <div class="cta__acoes"><a class="btn btn-marinho" href="../paginas/entrar.html">Entrar no MedKi</a><a class="btn btn-vidro" href="../paginas/entrar.html?criar=1">Tenho um convite</a></div>
           </div>
           <div class="cta__foto"><img src="../assets/img/familia.jpg" alt="Cuidadora ajudando uma senhora idosa a caminhar" loading="lazy"></div>
         </div>
@@ -180,7 +180,7 @@
 
   <footer id="rodape"></footer>
 
-  <!-- Explorar mais: convênio SUS → como funciona → entrar ou criar conta -->
+  <!-- Como funciona: papel do MedKi → passos → entrar ou usar convite -->
   <div class="explorar" id="explorar" role="dialog" aria-modal="true" aria-labelledby="ex-t1" hidden>
     <div class="explorar__fundo" data-fecha-explorar></div>
     <div class="explorar__caixa">
@@ -189,23 +189,23 @@
       <div class="explorar__trilho">
         <section class="explorar__slide is-on" aria-labelledby="ex-t1">
           <span class="explorar__selo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg></span>
-          <h2 id="ex-t1">O MedKi é um <b>convênio com o SUS</b></h2>
-          <p>Os remédios e insumos de uso contínuo são <b>os mesmos da farmácia da sua unidade básica de saúde</b>, entregues em casa para quem tem dificuldade de ir buscar.</p>
-          <ul class="explorar__chips"><li><b>Gratuito</b> para o paciente</li><li>Ligado à sua <b>unidade de saúde</b></li><li>Para <b>uso contínuo</b></li></ul>
+          <h2 id="ex-t1">Quando a entrega <b>falha</b></h2>
+          <p>Programas como o Remédio em Casa levam o medicamento até quem não consegue ir à unidade. Quando a entrega não chega, o MedKi <b>leva o aviso até a farmácia da unidade</b>.</p>
+          <ul class="explorar__chips"><li><b>Gratuito</b> para o paciente</li><li>Ligado à <b>farmácia da unidade</b></li><li>Para <b>uso contínuo</b></li></ul>
         </section>
         <section class="explorar__slide" aria-labelledby="ex-t2">
-          <h2 id="ex-t2">Se a entrega falhar, <b>você avisa</b></h2>
+          <h2 id="ex-t2">Como o aviso <b>anda</b></h2>
           <ol class="explorar__lista">
             <li><span>1</span><p><b>A família ou o Agente Comunitário de Saúde</b> avisa a falta em poucos toques.</p></li>
             <li><span>2</span><p><b>A farmácia da unidade</b> recebe o aviso numa fila por prioridade.</p></li>
-            <li><span>3</span><p><b>Você acompanha</b> cada etapa até o remédio chegar em casa.</p></li>
+            <li><span>3</span><p><b>Você acompanha</b> cada etapa, até o remédio ser entregue.</p></li>
           </ol>
         </section>
         <section class="explorar__slide" aria-labelledby="ex-t3">
           <h2 id="ex-t3">Como você quer <b>continuar?</b></h2>
           <div class="explorar__opcoes">
             <a class="explorar__opcao explorar__opcao--1" href="../paginas/entrar.html"><b>Entrar</b><span>Já tenho conta no MedKi</span></a>
-            <a class="explorar__opcao explorar__opcao--2" href="../paginas/entrar.html?criar=1"><b>Criar conta</b><span>Recebi o convite do <b>Agente Comunitário de Saúde</b></span></a>
+            <a class="explorar__opcao explorar__opcao--2" href="../paginas/entrar.html?criar=1"><b>Tenho um convite</b><span>Recebi o convite do <b>Agente Comunitário de Saúde</b></span></a>
           </div>
         </section>
       </div>
