@@ -108,7 +108,7 @@
     if (usuario.perfil === "farmacia") return [
       ["Operação", [["#/", "inicio", "Início", I.casa], ["#/fila", "fila", "Fila de prioridade", I.lista, atrasos, true], ["#/avisos", "avisos", "Fluxo de entregas", I.quadro, abertos]]],
       ["Unidade", [["#/pacientes", "pacientes", "Pacientes", I.pacientes], ["#/indicadores", "indicadores", "Indicadores", I.relatorio]]]
-    ].concat(usuario.responsavel ? [["Gestão", [["#/contas", "contas", "Contas da unidade", I.equipe]]]] : []);
+    ].concat(usuario.responsavel ? [["Gestão", [["#/contas", "contas", "Contas da unidade", I.equipe], ["#/prazos", "prazos", "Prazos", I.relogio]]]] : []);
     if (usuario.perfil === "acs") return [
       ["Acompanhamento", [["#/", "inicio", "Início", I.casa], ["#/avisos", "avisos", "Avisos da microárea", I.quadro, abertos], ["#/historico", "historico", "Histórico", I.relatorio]]],
       ["Ações", [["#/falta/nova", "falta", "Avisar falta", I.assist], ["#/vincular", "vincular", "Vincular familiar", I.vincular]]],
@@ -550,7 +550,7 @@
     tela.innerHTML = `<div data-a><a class="btn-p" href="#/pacientes">${I.volta}Pacientes</a></div>
       <form class="card passo-card" id="f-pac" novalidate data-a style="margin:14px 0 0">${cab(I.pacientes, "Dados do paciente", `<small>microárea ${esc(usuario.microarea)}</small>`)}
       <div class="duas-col" style="margin-top:14px"><div class="campo"><label for="p-cod">Código do paciente</label><input class="inp" id="p-cod" placeholder="P-0000" value="P-0${300 + D.db().pacientes.length}"><small>Use o código do cadastro da unidade.</small></div><div class="campo"><label for="p-ini">Iniciais do nome</label><input class="inp" id="p-ini" placeholder="M. S."></div></div>
-      <fieldset style="border:0;padding:0;margin:20px 0 0"><legend class="rot">Remédios e insumos de uso contínuo</legend><div id="meds" style="display:grid;gap:8px">${linha(0)}${linha(1)}</div><button class="link-btn" type="button" id="add-med" style="margin-top:12px">+ Adicionar item</button></fieldset>
+      <fieldset style="border:0;padding:0;margin:20px 0 0"><legend class="rot">Remédios e insumos de uso contínuo (pode ficar vazio)</legend><div id="meds" style="display:grid;gap:8px">${linha(0)}${linha(1)}</div><button class="link-btn" type="button" id="add-med" style="margin-top:12px">+ Adicionar item</button></fieldset>
       <p class="sub" style="margin-top:12px;font-size:.84rem">Não informe nome completo, CPF, endereço ou diagnóstico.</p>
       <div id="p-erro" class="msg-erro" role="alert" style="margin-top:10px"></div><div class="wizard__nav"><a class="btn-p" href="#/pacientes">Cancelar</a><button class="btn-p btn-p--azul" type="submit">Salvar paciente</button></div></form>`;
     const meds = $("#meds"); let n = 2;
@@ -638,6 +638,23 @@
     }
   };
 
+  // Prazos da unidade (RN08): valem para os próximos avisos
+  R.prazos = () => {
+    if (!(usuario.perfil === "farmacia" && usuario.responsavel)) { location.hash = "#/"; return; }
+    const u = D.db().unidade;
+    tela.innerHTML = `<form class="card passo-card" id="f-prazos" novalidate data-a style="margin:0 auto">${cab(I.relogio, "Prazos de resposta")}
+      <div class="duas-col" style="margin-top:14px"><div class="campo"><label for="pz-resp">Primeira resposta (dias úteis)</label><input class="inp" id="pz-resp" type="number" min="1" max="30" step="1" inputmode="numeric" value="${u.prazoRespostaUteis}"><small>Tempo para tirar o aviso de Pendente.</small></div>
+      <div class="campo"><label for="pz-ent">Entrega (dias corridos)</label><input class="inp" id="pz-ent" type="number" min="1" max="60" step="1" inputmode="numeric" value="${u.prazoEntregaDias}"><small>Contados a partir da abertura do aviso.</small></div></div>
+      <p class="sub" style="margin-top:12px;font-size:.84rem">Os novos prazos valem para os avisos registrados daqui em diante. Os avisos já abertos mantêm o prazo com que foram criados.</p>
+      <div id="pz-erro" class="msg-erro" role="alert" style="margin-top:10px"></div><div class="wizard__nav"><span></span><button class="btn-p btn-p--azul" type="submit">Salvar prazos</button></div></form>`;
+    $("#f-prazos").addEventListener("submit", e => {
+      e.preventDefault();
+      const r = D.salvarPrazos({ resposta: $("#pz-resp").value, entrega: $("#pz-ent").value }, usuario);
+      if (r.erro) { $("#pz-erro").textContent = r.erro; return; }
+      $("#pz-erro").textContent = ""; toast("Prazos salvos.", "ok");
+    });
+  };
+
   // Contas da unidade (RF02)
   R.contas = () => {
     if (!(usuario.perfil === "farmacia" && usuario.responsavel)) { location.hash = "#/"; return; }
@@ -676,7 +693,8 @@
       vincular: ["Vincular familiar", "Envie um convite por link para a família criar a conta."],
       historico: ["Histórico", "Tudo o que já foi avisado e entregue."],
       indicadores: ["Indicadores", "Tempo de resposta e falhas por insumo e microárea."],
-      contas: ["Contas da unidade", "Cadastre, edite e desative contas do Agente Comunitário de Saúde e da farmácia."]
+      contas: ["Contas da unidade", "Cadastre, edite e desative contas do Agente Comunitário de Saúde e da farmácia."],
+      prazos: ["Prazos", "Primeira resposta e entrega dos próximos avisos."]
     };
     return T[r] || ["Painel", ""];
   }
@@ -684,7 +702,7 @@
     const { r, sub, q } = rota;
     let extra = null;
     if (r === "falta") extra = R.falta(sub); else if (r === "aviso") extra = R.aviso(sub); else if (r === "fila") extra = R.fila(); else if (r === "avisos") extra = R.avisos();
-    else if (r === "pacientes") extra = R.pacientes(sub, q); else if (r === "vincular") extra = R.vincular(q); else if (r === "historico") extra = R.relatorio(q, false); else if (r === "indicadores") extra = R.relatorio(q, true); else if (r === "contas") extra = R.contas(); else extra = R.inicio();
+    else if (r === "pacientes") extra = R.pacientes(sub, q); else if (r === "vincular") extra = R.vincular(q); else if (r === "historico") extra = R.relatorio(q, false); else if (r === "indicadores") extra = R.relatorio(q, true); else if (r === "contas") extra = R.contas(); else if (r === "prazos") extra = R.prazos(); else extra = R.inicio();
     const c = cabecalho(r === "aviso" ? "aviso" : r);
     trocaTitulo((extra && extra.titulo) || c[0], (extra && extra.sub) || c[1]);
     document.title = "MedKi — " + ((extra && extra.titulo) || c[0]);

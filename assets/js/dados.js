@@ -14,6 +14,8 @@
   function iso(d) { return new Date(d).toISOString(); }
   function diasAtras(n, hora) { var d = new Date(); d.setDate(d.getDate() - n); d.setHours(hora == null ? 9 : hora, 15, 0, 0); return d; }
   function soData(d) { return iso(d).slice(0, 10); }
+  // Nome comparável: Unicode NFKC, minúsculas e espaços repetidos reduzidos (RN04/RF06)
+  function normaliza(s) { return String(s || "").normalize("NFKC").toLowerCase().replace(/\s+/g, " ").trim(); }
 
   function semente() {
     var u = [
@@ -38,7 +40,7 @@
     function nova(pac, insumo, cat, faltaHa, abertoHa, por, passos, extra) {
       seq++; var aberto = diasAtras(abertoHa, 8 + (seq % 6)), h = [hist("Pendente", aberto, por, "Aviso registrado")], st = "Pendente", primeira = null;
       (passos || []).forEach(function (ps) { var q = new Date(aberto.getTime() + ps[1] * DIA); h.push(hist(ps[0], q, ps[2] || "U2", ps[3])); if (st === "Pendente" && ps[0] !== "Pendente" && !primeira) primeira = iso(q); st = ps[0]; });
-      n.push(Object.assign({ id: "N-" + String(1000 + seq), pacienteId: pac, insumo: insumo, categoria: cat, dataFalta: soData(diasAtras(faltaHa)), observacao: "", criadoEm: iso(aberto), criadoPor: por, status: st, historico: h, primeiraResposta: primeira, tentativas: 0, motivoCancelamento: "" }, extra || {}));
+      n.push(Object.assign({ id: "N-" + String(1000 + seq), pacienteId: pac, insumo: insumo, categoria: cat, dataFalta: soData(diasAtras(faltaHa)), observacao: "", criadoEm: iso(aberto), criadoPor: por, prazoRespostaUteis: 2, prazoEntregaDias: 7, status: st, historico: h, primeiraResposta: primeira, tentativas: 0, motivoCancelamento: "" }, extra || {}));
     }
     // Avisos em aberto
     nova("P-0142", "Insulina NPH 100 UI/mL", "insulina", 5, 4, "U5", [], { observacao: "A entrega de terça não chegou." });
@@ -68,6 +70,8 @@
   function carregar() {
     try { db = JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch (e) { db = null; }
     if (!db || db.versao !== VERSAO) { db = semente(); salvar(); }
+    // Avisos sem prazo gravado recebem o prazo vigente, para uma mudança futura não valer para eles (RN08)
+    db.notificacoes.forEach(function (n) { if (!n.prazoRespostaUteis) { n.prazoRespostaUteis = db.unidade.prazoRespostaUteis; n.prazoEntregaDias = db.unidade.prazoEntregaDias; } });
     return db;
   }
   function salvar() { localStorage.setItem(CHAVE, JSON.stringify(db)); }
@@ -78,15 +82,18 @@
   function emAberto(n) { return n.status !== "Entregue" && n.status !== "Cancelada"; }
   function emAtraso(n, agora) {
     if (!emAberto(n)) return false; agora = agora || new Date();
-    if (!n.primeiraResposta && diasUteis(n.criadoEm, agora) > db.unidade.prazoRespostaUteis) return true;
-    return diasCorridos(n.criadoEm, agora) > db.unidade.prazoEntregaDias;
+    var resp = n.prazoRespostaUteis || db.unidade.prazoRespostaUteis, ent = n.prazoEntregaDias || db.unidade.prazoEntregaDias;
+    if (!n.primeiraResposta && diasUteis(n.criadoEm, agora) > resp) return true;
+    return diasCorridos(n.criadoEm, agora) > ent;
   }
   // ---------- prioridade (RN05) ----------
   function paciente(id) { return db.pacientes.filter(function (p) { return p.id === id; })[0]; }
   function usuario(id) { return db.usuarios.filter(function (u) { return u.id === id; })[0]; }
   function diasSem(n, ate) { var fim = ate || (emAberto(n) ? new Date() : new Date(n.historico[n.historico.length - 1].data)); return Math.max(0, diasCorridos(n.dataFalta + "T00:00:00", fim)); }
+  // shortcut: "outro" conta como medicamento porque o item não tem marcação própria; o backend Django tem o campo é_medicamento
+  function qtdMedicamentos(p) { var vistos = {}; (p ? p.medicamentos : []).forEach(function (m) { if (m.categoria !== "fralda") vistos[normaliza(m.nome)] = 1; }); return Object.keys(vistos).length; }
   function prioridade(n) {
-    var p = paciente(n.pacienteId), peso = (CATEGORIAS[n.categoria] || CATEGORIAS.outro).peso, dias = diasSem(n), extra = p && p.medicamentos.length >= 5 ? 2 : 0;
+    var p = paciente(n.pacienteId), peso = (CATEGORIAS[n.categoria] || CATEGORIAS.outro).peso, dias = diasSem(n), extra = qtdMedicamentos(p) >= 5 ? 2 : 0;
     return { total: peso + dias + extra, peso: peso, dias: dias, extra: extra };
   }
   function nivel(total) { return total >= 12 ? "Muito alta" : total >= 8 ? "Alta" : total >= 4 ? "Média" : "Normal"; }
@@ -107,8 +114,8 @@
   }
   // ---------- registro (RN04, RF05, RF06) ----------
   function abertaPara(pacId, insumo) {
-    var k = insumo.trim().toLowerCase();
-    return db.notificacoes.filter(function (n) { return n.pacienteId === pacId && n.insumo.trim().toLowerCase() === k && emAberto(n); })[0] || null;
+    var k = normaliza(insumo);
+    return db.notificacoes.filter(function (n) { return n.pacienteId === pacId && normaliza(n.insumo) === k && emAberto(n); })[0] || null;
   }
   function registrar(dados, user) {
     var p = paciente(dados.pacienteId);
@@ -120,7 +127,7 @@
     if (new Date(dados.dataFalta + "T00:00:00") > new Date()) return { erro: "A data não pode ser no futuro." };
     var dup = abertaPara(p.id, dados.insumo); if (dup) return { duplicada: dup };
     db.seq++; var agora = iso(new Date());
-    var n = { id: "N-" + db.seq, pacienteId: p.id, insumo: dados.insumo.trim(), categoria: dados.categoria, dataFalta: dados.dataFalta, observacao: (dados.observacao || "").trim().slice(0, 300), criadoEm: agora, criadoPor: user.id, status: "Pendente", historico: [{ status: "Pendente", data: agora, usuario: user.id, nota: "Aviso registrado" }], primeiraResposta: null, tentativas: 0, motivoCancelamento: "" };
+    var n = { id: "N-" + db.seq, pacienteId: p.id, insumo: dados.insumo.trim(), categoria: dados.categoria, dataFalta: dados.dataFalta, observacao: (dados.observacao || "").trim().slice(0, 300), criadoEm: agora, criadoPor: user.id, prazoRespostaUteis: db.unidade.prazoRespostaUteis, prazoEntregaDias: db.unidade.prazoEntregaDias, status: "Pendente", historico: [{ status: "Pendente", data: agora, usuario: user.id, nota: "Aviso registrado" }], primeiraResposta: null, tentativas: 0, motivoCancelamento: "" };
     db.notificacoes.push(n); salvar(); return { ok: n };
   }
   // ---------- status (RN06, RN07, RF10–RF12) ----------
@@ -137,7 +144,7 @@
   }
   function podeCancelar(n, user) {
     if (user.perfil === "farmacia") return n.status === "Pendente" || n.status === "Em separação";
-    if (user.perfil === "notificante" || user.perfil === "acs") return n.status === "Pendente" && n.criadoPor === user.id;
+    if (user.perfil === "notificante") return n.status === "Pendente" && n.criadoPor === user.id;
     return false;
   }
   function cancelar(n, user, motivo) {
@@ -152,7 +159,7 @@
     if (!/^P-\d{4}$/.test(cod)) return { erro: "O código deve seguir o formato P-0000." };
     if (paciente(cod)) return { erro: "Já existe um paciente com este código." };
     var ini = (dados.iniciais || "").trim().toUpperCase(); if (!/^([A-ZÀ-Ú]\.\s?){1,4}$/.test(ini)) return { erro: "Informe só as iniciais, por exemplo: M. S." };
-    var meds = (dados.medicamentos || []).filter(function (x) { return x.nome && x.nome.trim(); }); if (!meds.length) return { erro: "Informe pelo menos um remédio ou insumo de uso contínuo." };
+    var meds = (dados.medicamentos || []).filter(function (x) { return x.nome && x.nome.trim(); });
     var p = { id: cod, iniciais: ini, microarea: user.microarea, vinculos: [], criadoPor: user.id, medicamentos: meds.map(function (x) { return { nome: x.nome.trim(), categoria: CATEGORIAS[x.categoria] ? x.categoria : "outro" }; }) };
     db.pacientes.push(p); salvar(); return { ok: p };
   }
@@ -183,6 +190,13 @@
     var u = dados.id ? usuario(dados.id) : null;
     if (!u) { u = { id: "U" + (db.usuarios.length + 1) + Date.now().toString(36).slice(-3), ativo: true, senha: hash("medki123"), responsavel: false }; db.usuarios.push(u); }
     u.nome = dados.nome.trim(); u.email = email; u.perfil = dados.perfil; u.microarea = dados.perfil === "acs" ? dados.microarea : undefined; salvar(); return { ok: u };
+  }
+  function salvarPrazos(dados, user) {
+    if (!(user.perfil === "farmacia" && user.responsavel)) return { erro: "Somente o farmacêutico responsável ajusta os prazos." };
+    var r = +dados.resposta, e = +dados.entrega;
+    if (!(r >= 1 && r <= 30 && r % 1 === 0)) return { erro: "A primeira resposta deve ficar entre 1 e 30 dias úteis." };
+    if (!(e >= 1 && e <= 60 && e % 1 === 0)) return { erro: "A entrega deve ficar entre 1 e 60 dias corridos." };
+    db.unidade.prazoRespostaUteis = r; db.unidade.prazoEntregaDias = e; salvar(); return { ok: db.unidade };
   }
   function alternarConta(id, user) { var u = usuario(id); if (!u || !user.responsavel || u.id === user.id) return { erro: "Não é possível alterar esta conta." }; u.ativo = !u.ativo; salvar(); return { ok: u }; }
   // ---------- autenticação (RF01) e sessão (RNF06) ----------
@@ -215,6 +229,6 @@
     paciente: paciente, usuario: usuario, prioridade: prioridade, nivel: nivel, fila: fila, emAtraso: emAtraso, emAberto: emAberto, diasSem: diasSem,
     visiveis: visiveis, pacientesDe: pacientesDe, abertaPara: abertaPara, registrar: registrar, proximo: proximo, avancar: avancar, semSucesso: semSucesso,
     podeCancelar: podeCancelar, cancelar: cancelar, cadastrarPaciente: cadastrarPaciente, convidar: convidar, aceitarConvite: aceitarConvite,
-    salvarConta: salvarConta, alternarConta: alternarConta, entrar: entrar, sessao: sessao, tocarSessao: tocarSessao, sair: sair, indicadores: indicadores
+    salvarConta: salvarConta, salvarPrazos: salvarPrazos, alternarConta: alternarConta, normaliza: normaliza, qtdMedicamentos: qtdMedicamentos, entrar: entrar, sessao: sessao, tocarSessao: tocarSessao, sair: sair, indicadores: indicadores
   };
 })();
