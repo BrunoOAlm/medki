@@ -240,7 +240,7 @@
 .vantagem { padding: 22px 22px 24px; border-radius: 22px; }
 .vantagem b { display: block; font-family: var(--sans); font-size: 1.12rem; font-weight: 700; color: var(--marinho); }
 .vantagem span { display: block; margin-top: 4px; color: #3d4a63; font-size: .9rem; line-height: 1.45; }
-.vantagem--1 { background: var(--p-azul); } .vantagem--2 { background: var(--p-menta); } .vantagem--3 { background: var(--p-lilas); } .vantagem--4 { background: var(--p-pessego); }
+.vantagem--1, .vantagem--2, .vantagem--3, .vantagem--4 { background: #fff; box-shadow: inset 0 0 0 1px var(--linha); }
 
 /* Cabeçalho com ilustração (estilo da referência) */
 .cab7 { display: flex; align-items: center; gap: 22px; margin-bottom: 34px; }
@@ -278,7 +278,7 @@
 .porque__item h3 { font-family: var(--sans); font-size: 1.05rem; font-weight: 700; color: var(--marinho); }
 .porque__item p b { color: var(--marinho); }
 .numero { border-radius: 22px; box-shadow: none; }
-.numero--1 { background: var(--p-azul); } .numero--2 { background: var(--p-menta); } .numero--3 { background: var(--p-lilas); } .numero--4 { background: var(--p-pessego); }
+.numero--1, .numero--2, .numero--3, .numero--4 { background: #fff; box-shadow: inset 0 0 0 1px var(--linha); }
 .numero > b { color: var(--marinho); font-weight: 700; }
 .numero p b { display: inline; font-family: inherit; font-size: inherit; font-weight: 700; letter-spacing: 0; line-height: inherit; color: var(--marinho); }
 .faq { gap: 10px; border-top: 0; }
