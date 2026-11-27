@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Como funciona — MedKi</title>
+  <meta name="description" content="Perfis de acesso, fluxo do aviso de falta, fila de prioridade, ciclo de status e prazos do MedKi.">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-pagina="como">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <section class="topo" aria-labelledby="topo-t">
+    <header id="nav"></header>
+    <div class="wrap">
+      <span class="olho rv">Como funciona</span>
+      <h1 class="titulo t-xl rv" id="topo-t">Um aviso simples, uma fila justa, uma entrega acompanhada</h1>
+      <p class="sub rv">Veja quem faz o quê no MedKi, como a urgência é calculada e o que acontece em cada etapa até o remédio chegar em casa.</p>
+    </div>
+    <div class="topo__marca" aria-hidden="true">MedKi</div>
+  </section>
+
+  <main id="conteudo">
+    <!-- Perfis (RN01) -->
+    <section class="secao" id="perfis" aria-labelledby="perfis-t">
+      <div class="wrap">
+        <div class="cab7 rv"><span class="cab7__ilus" aria-hidden="true"><i></i><i></i></span><div><h2 class="titulo t-lg" id="perfis-t">Cada pessoa tem um papel e <span class="destaque">vê só o que precisa</span></h2><p class="sub">Cada usuário tem um único perfil. O farmacêutico responsável pela unidade cria as contas do <b>Agente Comunitário de Saúde</b> e da farmácia.</p></div></div>
+        <div class="grade7" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+          <article class="c7 rv"><span class="c7__num">01</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="16" r="7"/><path d="M5 40v-3a9 9 0 0 1 9-9h8a9 9 0 0 1 9 9v3"/><circle cx="35" cy="19" r="5"/><path d="M33 28h3a8 8 0 0 1 8 8v3"/></svg><h3>Família ou cuidador</h3><p>Avisa a falta dos pacientes vinculados a ele e <b>acompanha cada etapa</b>. Pode cancelar o próprio aviso enquanto estiver Pendente.</p></article>
+          <article class="c7 rv" style="background:var(--p-menta)"><span class="c7__num">02</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21 24 7l18 14v20a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M19 43V30h10v13M24 15v8M20 19h8"/></svg><h3>Agente Comunitário de Saúde</h3><p>Cadastra os pacientes da microárea, <b>convida os familiares</b> e também registra faltas durante a visita.</p></article>
+          <article class="c7 rv" style="background:var(--p-lilas)"><span class="c7__num">03</span><svg class="c7__ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="14" width="36" height="26" rx="3"/><path d="M17 14V9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M24 21v12M18 27h12"/></svg><h3>Farmácia da unidade</h3><p>Atende a <b>fila por prioridade</b>, atualiza o status com um clique e acompanha os indicadores.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fluxo (BPMN) -->
+    <section class="secao secao--azul" aria-labelledby="fluxo-t">
+      <div class="wrap">
+        <div class="secao-cab rv"><span class="olho">O caminho de um aviso</span><h2 class="titulo t-lg" id="fluxo-t">Da falta percebida em casa <span class="destaque">até a entrega</span></h2><p class="sub">O processo foi desenhado a partir da rotina da farmácia e dos agentes comunitários.</p></div>
+        <div class="caminho">
+          <article class="caminho__col rv">
+            <div class="caminho__topo"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><div><h3>Notificante</h3><small>Família, cuidador ou <b>Agente Comunitário de Saúde</b></small></div></div>
+            <ol class="caminho__passos">
+              <li><div><b>Percebe a falta</b><span>O remédio acabou ou a entrega não chegou.</span></div></li>
+              <li><div><b>Registra o aviso</b><span>Paciente, insumo e a data em que faltou.</span></div></li>
+              <li><div><b>Acompanha o status</b><span>Vê cada etapa com data e hora.</span></div></li>
+            </ol>
+          </article>
+          <article class="caminho__col rv">
+            <div class="caminho__topo"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></span><div><h3>MedKi</h3><small>Automático</small></div></div>
+            <ol class="caminho__passos">
+              <li><div><b>Valida os dados</b><span>Se já existe aviso em aberto, mostra o existente.</span></div></li>
+              <li><div><b>Registra como Pendente</b><span>E calcula a prioridade na fila.</span></div></li>
+              <li><div><b>Revisa todo dia</b><span>Recalcula a prioridade e marca os atrasos.</span></div></li>
+            </ol>
+          </article>
+          <article class="caminho__col rv">
+            <div class="caminho__topo"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span><div><h3>Farmácia</h3><small>Da unidade básica</small></div></div>
+            <ol class="caminho__passos">
+              <li><div><b>Analisa a fila</b><span>Atende por ordem de prioridade.</span></div></li>
+              <li><div><b>Separa e envia</b><span>Em separação, depois Saiu para entrega.</span></div></li>
+              <li><div><b>Registra a entrega</b><span>Sem sucesso? O aviso volta para Pendente.</span></div></li>
+            </ol>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ciclo de status (máquina de estados) -->
+    <section class="secao" id="status" aria-labelledby="status-t">
+      <div class="wrap">
+        <div class="cabeca"><div class="cabeca__txt rv"><span class="olho">Ciclo de status</span><h2 class="titulo t-lg" id="status-t">Quatro etapas, e só a farmácia muda o status</h2><p class="sub">Todo aviso nasce Pendente. Cada mudança é registrada com data e hora do servidor e com quem a fez, e esse histórico não pode ser alterado nem apagado.</p></div></div>
+        <div class="status-trilha">
+          <div class="st-card st-card--pendente rv"><span class="st-card__bola">1</span><h3>Pendente</h3><p>Aviso registrado, <b>aguardando a farmácia</b>.</p></div>
+          <div class="st-card st-card--separacao rv"><span class="st-card__bola">2</span><h3>Em separação</h3><p>A farmácia está <b>preparando o insumo</b>.</p></div>
+          <div class="st-card st-card--saiu rv"><span class="st-card__bola">3</span><h3>Saiu para entrega</h3><p>O remédio está <b>a caminho da sua casa</b>.</p></div>
+          <div class="st-card st-card--entregue rv"><span class="st-card__bola"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span><h3>Entregue</h3><p><b>Pronto!</b> O tratamento segue sem parar.</p></div>
+        </div>
+        <div class="status-extra">
+          <div class="st-card st-card--tentativa rv"><span class="st-card__bola">↺</span><h3>Volta para a fila</h3><p>Se a entrega não for concluída, a farmácia registra a tentativa e o aviso <b>volta para Pendente</b>.</p></div>
+          <div class="st-card st-card--cancelada rv"><span class="st-card__bola">✕</span><h3>Quem pode cancelar</h3><p><b>A farmácia</b>, com motivo, enquanto Pendente ou Em separação. <b>A família</b>, apenas enquanto Pendente.</p></div>
+          <div class="st-card st-card--atraso rv"><span class="st-card__bola">!</span><h3>Em atraso não é um status</h3><p>É uma <b>marcação automática</b> para avisos que passaram do prazo. O status continua o mesmo.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prioridade (RN05) -->
+    <section class="secao secao--azul" id="prioridade" aria-labelledby="prio-t">
+      <div class="wrap prio">
+        <div class="rv">
+          <span class="olho">Fila de prioridade</span>
+          <h2 class="titulo t-lg" id="prio-t" style="margin-top:16px">Como a pontuação é calculada</h2>
+          <p class="sub" style="margin-top:18px">A pontuação soma o peso do insumo, 1 ponto por dia sem o insumo e 2 pontos para pacientes com 5 ou mais remédios de uso contínuo. Ela é recalculada todos os dias; em caso de empate, o aviso mais antigo é atendido primeiro.</p>
+          <table class="tabela" style="margin-top:24px">
+            <thead><tr><th>Critério</th><th>Pontos</th></tr></thead>
+            <tbody><tr><td>Insulina</td><td>5</td></tr><tr><td>Anti-hipertensivo</td><td>3</td></tr><tr><td>Fralda geriátrica</td><td>2</td></tr><tr><td>Outros insumos</td><td>1</td></tr><tr><td>Cada dia sem o insumo</td><td>+1</td></tr><tr><td>Paciente com 5 ou mais remédios</td><td>+2</td></tr></tbody>
+          </table>
+        </div>
+        <form class="calc rv-zoom" id="calc" aria-labelledby="calc-t" onsubmit="return false">
+          <h3 id="calc-t">Simule a prioridade</h3>
+          <fieldset><legend>Tipo de insumo</legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="calc-cat" value="insulina" checked><span>Insulina</span></label>
+              <label class="chip"><input type="radio" name="calc-cat" value="antihipertensivo"><span>Anti-hipertensivo</span></label>
+              <label class="chip"><input type="radio" name="calc-cat" value="fralda"><span>Fralda geriátrica</span></label>
+              <label class="chip"><input type="radio" name="calc-cat" value="outro"><span>Outro</span></label>
+            </div>
+          </fieldset>
+          <fieldset><legend class="calc__linha" style="width:100%"><span>Dias sem o insumo</span><span id="calc-dias-v">3 dias</span></legend>
+            <input class="faixa" type="range" id="calc-dias" min="0" max="15" value="3" aria-label="Dias sem o insumo">
+          </fieldset>
+          <label class="troca"><input type="checkbox" id="calc-cinco"> O paciente usa 5 ou mais remédios de uso contínuo</label>
+          <div class="calc__resultado" aria-live="polite"><span class="calc__total" id="calc-total">8</span><span>Prioridade <span class="calc__nivel" id="calc-nivel">Alta</span></span><span class="calc__barra"><span id="calc-barra"></span></span></div>
+          <div class="calc__conta" id="calc-conta"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Prazos (RN08) e regras -->
+    <section class="secao" aria-labelledby="regras-t">
+      <div class="wrap">
+        <div class="cabeca"><div class="cabeca__txt rv"><span class="olho">Regras que protegem o paciente</span><h2 class="titulo t-lg" id="regras-t">Prazos, duplicidade e privacidade</h2></div></div>
+        <div class="grade-4">
+          <div class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>2 dias úteis</h3><p>Prazo para a farmácia dar a primeira resposta e tirar o aviso de Pendente.</p></div>
+          <div class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></span><h3>7 dias corridos</h3><p>Prazo para concluir a entrega após a abertura. A unidade pode ajustar os prazos.</p></div>
+          <div class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></span><h3>Sem avisos duplicados</h3><p>Só pode haver um aviso em aberto por paciente e insumo. O MedKi mostra o aviso existente.</p></div>
+          <div class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4 6v6c0 5 3.4 8.7 8 9.5 4.6-.8 8-4.5 8-9.5V6z"/></svg></span><h3>Dados mínimos</h3><p>Código e iniciais do paciente. Sem nome completo, CPF, endereço ou diagnóstico.</p></div>
+        </div>
+        <div class="cta rv-zoom" style="margin-top:56px">
+          <div><h2 class="titulo t-md">Pronto para avisar uma falta?</h2><p class="sub">Leva menos de um minuto, em até três telas.</p><div class="cta__acoes"><a class="btn btn-marinho" href="app.html#/falta/nova">Avisar falta de remédio</a><a class="btn btn-vidro" href="ajuda.html">Ver a ajuda</a></div></div>
+          <div class="cta__foto"><img src="../assets/img/cuidadora-2.jpg" alt="Profissional de saúde conversando com uma senhora idosa" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="rodape"></footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

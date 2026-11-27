@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedKi — Painel</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body class="app">
+  <a class="pular" href="#app-main">Pular para o conteúdo</a>
+  <div class="casca">
+    <aside class="lado" id="lado" aria-label="Menu do painel"></aside>
+    <div class="lado-fundo" id="lado-fundo" hidden></div>
+    <div class="area">
+      <header class="barra" id="barra"></header>
+      <main class="app-main" id="app-main" tabindex="-1"><div class="tela" id="tela"></div></main>
+    </div>
+  </div>
+  <div class="modal" id="modal" hidden><div class="modal__fundo" data-fecha-modal></div><div class="modal__caixa" role="dialog" aria-modal="true" aria-labelledby="modal-t"><button class="modal__fechar" type="button" aria-label="Fechar" data-fecha-modal>✕</button><div id="modal-corpo"></div></div></div>
+  <div class="sr-only" aria-live="polite" id="anuncio"></div>
+  <script src="../assets/js/site.js"></script>
+  <script src="../assets/js/dados.js"></script>
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

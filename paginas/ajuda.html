@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ajuda — MedKi</title>
+  <meta name="description" content="Guias passo a passo para familiares, agentes comunitários e farmácia, perguntas frequentes e acessibilidade do MedKi.">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-pagina="ajuda">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <section class="topo" aria-labelledby="topo-t">
+    <header id="nav"></header>
+    <div class="wrap">
+      <span class="olho rv">Central de ajuda</span>
+      <h1 class="titulo t-xl rv" id="topo-t">Como podemos ajudar?</h1>
+      <p class="sub rv">Guias curtos, em linguagem simples, para cada pessoa que usa o MedKi.</p>
+    </div>
+    <div class="topo__marca" aria-hidden="true">MedKi</div>
+  </section>
+
+  <main id="conteudo">
+    <section class="secao" id="perfis" aria-labelledby="guia-t">
+      <div class="wrap">
+        <div class="cabeca"><div class="cabeca__txt rv"><span class="olho">Passo a passo</span><h2 class="titulo t-lg" id="guia-t">Escolha o seu perfil</h2></div></div>
+        <div class="grade-3">
+          <article class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><h3>Sou familiar ou cuidador</h3>
+            <ol style="margin-top:12px;padding-left:20px;display:grid;gap:8px;color:var(--texto-2);font-size:.94rem"><li>Peça ao <b>Agente Comunitário de Saúde</b> da sua microárea para vincular você ao paciente.</li><li>Abra o convite e crie sua senha.</li><li>Toque em <b>Avisar falta</b>, escolha o paciente e o remédio.</li><li>Informe a data em que acabou e confirme.</li><li>Acompanhe o status na sua tela inicial.</li></ol>
+            <a class="btn btn-azul btn-sm" style="margin-top:18px" href="app.html#/falta/nova">Avisar falta</a></article>
+          <article class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg></span><h3>Sou Agente Comunitário</h3>
+            <ol style="margin-top:12px;padding-left:20px;display:grid;gap:8px;color:var(--texto-2);font-size:.94rem"><li>Entre com o e-mail cadastrado pela farmácia.</li><li>Em <b>Pacientes</b>, cadastre código, iniciais e remédios.</li><li>Em <b>Vincular familiar</b>, envie o convite por e-mail ou link.</li><li>Durante a visita, registre faltas pelo celular.</li><li>Acompanhe os avisos da sua microárea.</li></ol>
+            <a class="btn btn-azul btn-sm" style="margin-top:18px" href="entrar.html">Entrar como Agente Comunitário de Saúde</a></article>
+          <article class="cartao rv"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/></svg></span><h3>Sou da farmácia</h3>
+            <ol style="margin-top:12px;padding-left:20px;display:grid;gap:8px;color:var(--texto-2);font-size:.94rem"><li>Abra a <b>Fila de prioridade</b>: o mais urgente aparece no topo.</li><li>Use os filtros por status, insumo, microárea e atraso.</li><li>Avance o status com um clique a cada etapa.</li><li>Se a entrega falhar, registre a tentativa sem sucesso.</li><li>Veja os <b>Indicadores</b> e exporte em CSV ou PDF.</li></ol>
+            <a class="btn btn-azul btn-sm" style="margin-top:18px" href="entrar.html?perfil=farmacia">Entrar como farmácia</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao secao--azul" aria-labelledby="faq-t">
+      <div class="wrap">
+        <div class="cabeca cabeca--centro"><div class="cabeca__txt rv"><span class="olho">Perguntas frequentes</span><h2 class="titulo t-lg" id="faq-t">Encontre a sua resposta</h2></div></div>
+        <label class="busca rv"><span class="sr-only">Buscar nas perguntas</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="color:var(--texto-3)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="busca-faq" type="search" placeholder="Ex.: cancelar, prazo, insulina"></label>
+        <div class="faq" id="lista-faq">
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a1">O MedKi é do SUS? Preciso pagar?</button><div class="faq__r" id="a1" role="region"><p>Funciona em convênio com o SUS e é gratuito. Os medicamentos vêm da farmácia da sua unidade básica de saúde.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a2">O idoso precisa usar o celular?</button><div class="faq__r" id="a2" role="region"><p>Não. Quem avisa é o familiar, o cuidador ou o <b>Agente Comunitário de Saúde</b>. Assim, ninguém fica de fora por não usar tecnologia.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a3">Quanto tempo a farmácia tem para responder?</button><div class="faq__r" id="a3" role="region"><p>Até 2 dias úteis para a primeira resposta e até 7 dias corridos para concluir a entrega. Passou do prazo, o aviso fica marcado como “Em atraso”.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a4">Por que outro aviso foi atendido antes do meu?</button><div class="faq__r" id="a4" role="region"><p>A fila é por prioridade: insulina pesa mais, cada dia sem o insumo soma pontos e pacientes com 5 ou mais remédios ganham 2 pontos. Em empate, vale o aviso mais antigo.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a5">Como cancelo um aviso?</button><div class="faq__r" id="a5" role="region"><p>Abra o aviso e toque em Cancelar. O familiar pode cancelar enquanto estiver Pendente. Avisos entregues ou cancelados não podem ser reabertos.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a6">A internet caiu enquanto eu preenchia. Perdi tudo?</button><div class="faq__r" id="a6" role="region"><p>Não. O formulário guarda o que você preencheu e envia quando a conexão voltar.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a7">Quais dados do paciente vocês guardam?</button><div class="faq__r" id="a7" role="region"><p>Apenas um código, as iniciais, a microárea e a lista de remédios de uso contínuo. Nada de nome completo, CPF, endereço ou diagnóstico.</p></div></div>
+          <div class="faq__item"><button class="faq__q" type="button" aria-expanded="false" aria-controls="a8">Minha sessão expirou. Por quê?</button><div class="faq__r" id="a8" role="region"><p>Por segurança, a sessão termina após 30 minutos sem uso. Avisamos antes e você pode continuar conectado com um toque.</p></div></div>
+        </div>
+        <p id="faq-vazio" class="sub" style="text-align:center;margin-top:20px" hidden>Nenhuma pergunta encontrada. <a href="contato.html">Fale com a gente</a>.</p>
+      </div>
+    </section>
+
+    <section class="secao" id="acessibilidade" aria-labelledby="ac-t">
+      <div class="wrap dupla">
+        <div class="bloco bloco--claro rv"><span class="olho">Acessibilidade</span><h3 id="ac-t">Ajuste o MedKi ao seu jeito</h3><ul class="checks"><li>Funciona com o zoom do próprio navegador (Ctrl e +) sem perder conteúdo</li><li>Navegue só pelo teclado com Tab e Enter</li><li>Todos os campos têm nome e instrução</li><li>Contraste alto entre texto e fundo</li></ul></div>
+        <div class="bloco bloco--escuro rv"><span class="olho" style="color:var(--azul-claro)">Outros canais</span><h3>Precisa falar com alguém?</h3><p class="sub" style="margin-top:12px">Para dúvidas sobre o seu tratamento, procure a sua unidade básica de saúde. Para informações do SUS, ligue para o Disque Saúde 136.</p><a class="btn btn-branco" href="contato.html" style="margin-top:24px">Fale com a equipe MedKi</a></div>
+      </div>
+    </section>
+  </main>
+  <footer id="rodape"></footer>
+  <script src="../assets/js/site.js"></script>
+  <script>
+    (function () {
+      var campo = document.getElementById("busca-faq"), itens = document.querySelectorAll("#lista-faq .faq__item"), vazio = document.getElementById("faq-vazio");
+      var norm = function (s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); };
+      campo.addEventListener("input", function () {
+        var q = norm(campo.value.trim()), n = 0;
+        itens.forEach(function (it) { var ok = !q || norm(it.textContent).indexOf(q) >= 0; it.hidden = !ok; if (ok) n++; });
+        vazio.hidden = n > 0;
+      });
+    })();
+  </script>
+</body>
+</html>

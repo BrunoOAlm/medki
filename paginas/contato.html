@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contato — MedKi</title>
+  <meta name="description" content="Fale com a equipe do MedKi.">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body data-pagina="contato">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <section class="topo" aria-labelledby="topo-t">
+    <header id="nav"></header>
+    <div class="wrap">
+      <span class="olho rv">Contato</span>
+      <h1 class="titulo t-xl rv" id="topo-t">Fale com a gente</h1>
+      <p class="sub rv">Dúvidas sobre o MedKi, sugestões ou interesse em levar o sistema para a sua unidade de saúde.</p>
+    </div>
+    <div class="topo__marca" aria-hidden="true">MedKi</div>
+  </section>
+
+  <main id="conteudo">
+    <section class="secao" aria-labelledby="form-t">
+      <div class="wrap passos">
+        <form class="form-contato rv" id="form-contato" novalidate aria-labelledby="form-t">
+          <h2 class="titulo t-md" id="form-t">Envie uma mensagem</h2>
+          <div class="duas">
+            <div class="campo"><label for="c-nome">Seu nome</label><input class="inp" id="c-nome" name="nome" autocomplete="name" required></div>
+            <div class="campo"><label for="c-email">E-mail</label><input class="inp" id="c-email" name="email" type="email" autocomplete="email" required></div>
+          </div>
+          <div class="campo"><label for="c-perfil">Você é</label>
+            <select class="inp" id="c-perfil" name="perfil"><option>Familiar ou cuidador</option><option>Agente Comunitário de Saúde</option><option>Farmácia ou gestão da unidade</option><option>Outro</option></select></div>
+          <div class="campo"><label for="c-msg">Mensagem</label><textarea class="inp" id="c-msg" name="mensagem" required></textarea><small>Não escreva dados de saúde, CPF ou endereço do paciente.</small></div>
+          <label class="troca" style="margin-top:0"><input type="checkbox" id="c-lgpd" required> Li e concordo com a <a href="privacidade.html">política de privacidade</a>.</label>
+          <button class="btn btn-azul" type="submit" style="justify-self:start">Enviar mensagem <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <p class="sub" style="font-size:.85rem">Protótipo acadêmico: a mensagem fica salva só neste navegador.</p>
+        </form>
+        <div class="rv" style="display:grid;gap:16px">
+          <div class="cartao"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.9 2z"/></svg></span><h3>Disque Saúde 136</h3><p>Canal oficial de informações e ouvidoria em saúde.</p></div>
+          <div class="cartao"><span class="icone-redondo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg></span><h3>Sua unidade básica de saúde</h3><p>Para dúvidas sobre o tratamento, fale com a equipe da sua clínica da família ou com o seu <b>Agente Comunitário de Saúde</b>.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="rodape"></footer>
+  <script src="../assets/js/site.js"></script>
+  <script>
+    (function () {
+      var f = document.getElementById("form-contato");
+      function erro(id, msg) { var c = document.getElementById(id).closest(".campo") || document.getElementById(id).parentNode; c.classList.add("erro"); var m = document.createElement("span"); m.className = "msg-erro"; m.textContent = msg; c.appendChild(m); }
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        f.querySelectorAll(".msg-erro").forEach(function (m) { m.remove(); }); f.querySelectorAll(".erro").forEach(function (c) { c.classList.remove("erro"); });
+        var ok = true, nome = f.nome.value.trim(), email = f.email.value.trim(), msg = f.mensagem.value.trim();
+        if (nome.length < 2) { erro("c-nome", "Informe seu nome."); ok = false; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { erro("c-email", "Informe um e-mail válido."); ok = false; }
+        if (msg.length < 10) { erro("c-msg", "Escreva pelo menos 10 caracteres."); ok = false; }
+        if (!document.getElementById("c-lgpd").checked) { MedKiToast("Para enviar, aceite a política de privacidade.", "erro"); ok = false; }
+        if (!ok) { var p = f.querySelector(".erro .inp"); if (p) p.focus(); return; }
+        var lista = JSON.parse(localStorage.getItem("medki-contatos") || "[]"); lista.push({ nome: nome, email: email, perfil: f.perfil.value, mensagem: msg, data: new Date().toISOString() });
+        localStorage.setItem("medki-contatos", JSON.stringify(lista)); f.reset(); MedKiToast("Mensagem enviada. Obrigado!", "ok");
+      });
+    })();
+  </script>
+</body>
+</html>

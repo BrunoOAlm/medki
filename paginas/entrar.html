@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar — MedKi</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <style>
+    .login { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 100svh; }
+    .login__arte { position: relative; overflow: hidden; display: flex; flex-direction: column; padding: 40px clamp(28px, 5vw, 64px) 0; background: linear-gradient(102deg, #0a86ff 0%, #2b97ff 30%, #6fbcff 66%, #aee0ff 100%); color: #fff; isolation: isolate; }
+    .login__arte .nav__logo { color: #fff; font-size: 1.9rem; }
+    .login__txt { margin-top: clamp(40px, 8vh, 90px); max-width: 30rem; }
+    .login__arte h1 { font-family: var(--serif); font-size: clamp(2.6rem, 4.2vw, 4rem); font-weight: 400; line-height: .95; letter-spacing: -0.03em; animation: sobe 1.1s var(--suave) .1s both; }
+    .login__arte p { max-width: 400px; margin-top: 16px; color: rgba(255,255,255,.94); animation: sobe 1.1s var(--suave) .2s both; }
+    .login__pessoa { position: absolute; z-index: -1; right: clamp(0px, 4vw, 70px); bottom: 0; height: min(78%, 680px); width: auto; max-width: 92%; object-fit: contain; object-position: bottom; animation: pessoa-entra 1.4s var(--suave) .25s both; }
+    @keyframes pessoa-entra { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+    .login__form { display: flex; align-items: center; justify-content: center; padding: 48px 24px; background: #fff; }
+    .login__caixa { width: min(420px, 100%); animation: sobe 1s var(--suave) .15s both; }
+    .login__caixa h2 { font-family: var(--serif); font-size: 2.6rem; font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
+    .login__caixa form { display: grid; gap: 16px; margin-top: 28px; }
+    .login__troca { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--linha); color: var(--texto-2); font-size: .94rem; }
+    .login__troca a { color: var(--azul-forte); font-weight: 600; }
+    .alerta { padding: 12px 16px; border-radius: 12px; background: var(--vermelho-claro); color: var(--vermelho); font-weight: 600; font-size: .92rem; }
+    @media (max-width: 900px) { .login { grid-template-columns: 1fr; } .login__arte { min-height: 460px; } .login__txt { margin-top: 28px; max-width: 60%; } .login__pessoa { height: 88%; right: -4%; } }
+    @media (max-width: 560px) { .login__txt { max-width: 62%; } .login__arte h1 { font-size: 2.3rem; } .login__arte p { font-size: .92rem; } }
+  </style>
+</head>
+<body data-pagina="">
+  <a class="pular" href="#form-entrar">Pular para o formulário</a>
+  <div class="login">
+    <section class="login__arte" aria-label="MedKi">
+      <a class="nav__logo" href="../figma/index.html" aria-label="MedKi — página inicial">MedKi</a>
+      <div class="login__txt">
+        <h1>O tratamento não pode parar</h1>
+        <p>Entre para avisar uma falta, acompanhar entregas ou atender a fila da sua unidade.</p>
+      </div>
+      <img class="login__pessoa" src="../assets/img/pessoa-login.webp" alt="">
+    </section>
+    <main class="login__form">
+      <div class="login__caixa">
+        <div id="area-login">
+          <h2>Entrar</h2>
+          <p class="sub" style="margin-top:8px">Use o e-mail e a senha da sua conta MedKi.</p>
+          <form id="form-entrar" novalidate>
+            <div id="alerta" class="alerta" role="alert" hidden></div>
+            <div class="campo"><label for="email">E-mail</label><input class="inp" id="email" type="email" autocomplete="username" required></div>
+            <div class="campo"><label for="senha">Senha</label><input class="inp" id="senha" type="password" autocomplete="current-password" required><small>Esqueceu a senha? Peça para a farmácia da sua unidade redefinir.</small></div>
+            <button class="btn btn-azul" type="submit">Entrar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </form>
+          <p class="login__troca">Não tem conta? <a href="#" id="abre-convite">Criar conta</a></p>
+        </div>
+        <div id="area-convite" hidden>
+          <h2>Criar conta</h2>
+          <p class="sub" style="margin-top:8px">Digite o código de convite que o Agente Comunitário de Saúde enviou para você.</p>
+          <form id="form-convite" novalidate>
+            <div id="alerta2" class="alerta" role="alert" hidden></div>
+            <div class="campo"><label for="cv-cod">Código do convite</label><input class="inp" id="cv-cod" autocomplete="off" required></div>
+            <div class="campo"><label for="cv-nome">Seu nome</label><input class="inp" id="cv-nome" autocomplete="name" required></div>
+            <div class="campo"><label for="cv-senha">Crie uma senha</label><input class="inp" id="cv-senha" type="password" autocomplete="new-password" required><small>Pelo menos 8 caracteres.</small></div>
+            <button class="btn btn-azul" type="submit">Criar conta</button>
+            <button class="btn btn-linha" type="button" id="volta-login">Voltar</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../assets/js/site.js"></script>
+  <script src="../assets/js/dados.js"></script>
+  <script>
+    (function () {
+      var qs = new URLSearchParams(location.search), f = document.getElementById("form-entrar"), al = document.getElementById("alerta");
+      if (MedKiDB.sessao()) { location.replace("app.html"); return; }
+      function mostra(e, msg) { e.textContent = msg; e.hidden = false; }
+      f.addEventListener("submit", function (ev) {
+        ev.preventDefault(); al.hidden = true;
+        var email = f.email.value.trim(), senha = f.senha.value;
+        if (!email || !senha) { mostra(al, "Preencha e-mail e senha."); (email ? f.senha : f.email).focus(); return; }
+        var r = MedKiDB.entrar(email, senha); if (r.erro) { mostra(al, r.erro); f.senha.focus(); return; }
+        location.href = "app.html" + (qs.get("destino") ? "#" + qs.get("destino") : "");
+      });
+      var aL = document.getElementById("area-login"), aC = document.getElementById("area-convite");
+      function abreConvite(cod) { aL.hidden = true; aC.hidden = false; if (cod) document.getElementById("cv-cod").value = cod; document.getElementById(cod ? "cv-nome" : "cv-cod").focus(); }
+      document.getElementById("abre-convite").addEventListener("click", function (e) { e.preventDefault(); abreConvite(); });
+      document.getElementById("volta-login").addEventListener("click", function () { aC.hidden = true; aL.hidden = false; });
+      if (qs.get("convite")) abreConvite(qs.get("convite")); else if (qs.has("criar")) abreConvite();
+      if (qs.has("restaurar")) { MedKiDB.reiniciar(); Object.keys(localStorage).forEach(function (k) { if (k.indexOf("medki-rascunho") === 0) localStorage.removeItem(k); }); if (window.MedKiToast) MedKiToast("Dados de demonstração restaurados.", "ok"); }
+      document.getElementById("form-convite").addEventListener("submit", function (ev) {
+        ev.preventDefault(); var a2 = document.getElementById("alerta2"); a2.hidden = true;
+        var r = MedKiDB.aceitarConvite(document.getElementById("cv-cod").value.trim().toUpperCase(), document.getElementById("cv-nome").value, document.getElementById("cv-senha").value);
+        if (r.erro) { mostra(a2, r.erro); return; }
+        MedKiDB.entrar(r.ok.email, document.getElementById("cv-senha").value); location.href = "app.html";
+      });
+    })();
+  </script>
+</body>
+</html>
