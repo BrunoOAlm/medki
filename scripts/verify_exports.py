@@ -14,11 +14,11 @@ from django.utils import timezone
 from care.models import User
 
 client = Client()
-client.force_login(User.objects.get(email='farmacia@medki.example'))
+client.force_login(User.objects.get(email='paula@unidade.exemplo'))
 directory = Path('.evidence')
 directory.mkdir(exist_ok=True)
 for fmt in ['csv', 'pdf']:
-    response = client.get('/indicadores/', {'start': str(timezone.localdate() - timedelta(days=30)), 'end': str(timezone.localdate()), 'format': fmt})
+    response = client.get('/classico/indicadores/', {'start': str(timezone.localdate() - timedelta(days=30)), 'end': str(timezone.localdate()), 'format': fmt})
     assert response.status_code == 200, response.status_code
     target = directory / f'indicadores.{fmt}'
     target.write_bytes(response.content)

@@ -1,5 +1,5 @@
 /* MedKi — painel: família/cuidador, Agente Comunitário de Saúde e farmácia (RF01–RF16), no design e nas animações do vídeo de referência */
-(function () {
+(async function () {
   "use strict";
   const D = window.MedKiDB;
   const $ = (s, r) => (r || document).querySelector(s);
@@ -67,6 +67,21 @@
   const ini = txt => esc(String(txt).replace(/[^A-Za-zÀ-ú]/g, "").slice(0, 1).toUpperCase());
   const av = (letra, id, g) => `<span class="av${g ? " av--g" : ""}" style="--av:${cor(id)}" aria-hidden="true">${letra}</span>`;
   const st = s => `<span class="st st--${D.CLASSE[s]}">${esc(s)}</span>`;
+  // RN08: o atraso é uma marcação de prazo vencido, sem mudar o status; diz qual prazo venceu
+  const motivoAtraso = n => !n.primeiraResposta ? "Prazo de 1ª resposta vencido" : new Date() > new Date(n.prazoEntregaEm) ? "Prazo de entrega vencido" : "1ª resposta fora do prazo";
+  const prazoVencido = n => `<small class="atraso-nota">${motivoAtraso(n)}</small>`;
+  // Ilustração por tipo de item: todo item, inclusive os que o ACS cadastrar depois, tem imagem (sem fotos de marca)
+  const L = 'stroke="#9aa1ad" stroke-width="1.2"';
+  const FOTO = {
+    insulina: `<g transform="rotate(-45 16 16)"><rect x="4" y="12.5" width="19" height="7" rx="3" fill="#e6e9ee" ${L}/><rect x="22.5" y="13.5" width="6" height="5" rx="1.5" fill="#4b5160"/><rect x="8.5" y="14.2" width="7" height="3.6" rx="1" fill="#fff" ${L}/><path d="M4 16H1.5" stroke="#4b5160" stroke-width="1.4" stroke-linecap="round"/></g>`,
+    antihipertensivo: `<rect x="9.5" y="3.5" width="13" height="5" rx="1.5" fill="#4b5160"/><rect x="8" y="8.5" width="16" height="20" rx="2.5" fill="#e6e9ee" ${L}/><rect x="8" y="13.5" width="16" height="9" fill="#fff" ${L}/><path d="M11 17h10M11 19.5h6" stroke="#9aa1ad" stroke-width="1.2" stroke-linecap="round"/>`,
+    outro: `<rect x="4.5" y="7.5" width="23" height="17" rx="3" fill="#e6e9ee" ${L}/>${[11, 16, 21].map(x => [12.5, 19.5].map(y => `<circle cx="${x}" cy="${y}" r="2.3" fill="#fff" ${L}/>`).join("")).join("")}`,
+    fralda: `<path d="M4.5 9.5h23v4.5c0 6.2-4.7 10.5-11.5 10.5S4.5 20.2 4.5 14z" fill="#fff" ${L}/><path d="M4.5 9.5h23v3h-23z" fill="#c3c8d0"/><path d="M11 15c1.6 3.2 8.4 3.2 10 0" fill="none" ${L} stroke-linecap="round"/>`
+  };
+  // Foto em assets/img/itens/<categoria>.jpg; sem o arquivo, fica o desenho
+  const foto = cat => { const c = FOTO[cat] ? cat : "outro"; return `<span class="item-foto" aria-hidden="true"><svg viewBox="0 0 32 32">${FOTO[c]}</svg><img src="../assets/img/itens/${c}.jpg" alt="" loading="lazy" onerror="this.remove()"></span>`; };
+  // Paciente com rótulo: iniciais e código do cadastro da unidade (RN03)
+  const pacTxt = (p, comArea) => `<span title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD).">Paciente ${p.id} (${esc(p.iniciais)})</span>${comArea ? " · Microárea " + esc(p.microarea) : ""}`;
   const relativo = d => { const m = Math.round((Date.now() - new Date(d)) / 6e4); if (m < 60) return "há " + Math.max(1, m) + " min"; const h = Math.round(m / 60); if (h < 24) return "há " + h + " h"; const dd = Math.round(h / 24); return dd === 1 ? "ontem" : "há " + dd + " dias"; };
   const anuncia = msg => { $("#anuncio").textContent = msg; };
   const toast = (msg, tipo) => { MedKiToast(msg, tipo); anuncia(msg); };
@@ -76,6 +91,7 @@
   const primeiroNome = () => usuario.nome.split(" ")[0];
 
   // ---------- sessão (RF01, RNF06) ----------
+  await D.carregar();
   usuario = D.sessao();
   if (!usuario) { location.replace("entrar.html?destino=" + encodeURIComponent((location.hash || "#/").slice(1))); return; }
   let ultimoToque = 0, avisoAberto = false;
@@ -93,7 +109,7 @@
       });
     }
   }, 10000);
-  function sair() { D.sair(); location.href = "../figma/index.html"; }
+  async function sair() { await D.sair(); location.href = "../figma/index.html"; }
 
   // ---------- modal ----------
   let focoAntes = null;
@@ -122,10 +138,10 @@
   }
   function montaLado() {
     const u = D.db().unidade;
-    lado.innerHTML = `<div class="lado__topo"><a class="lado__logo" href="../figma/index.html" aria-label="MedKi — site">MedKi</a><button class="lado__btn" type="button" id="lado-fecha" aria-label="Fechar menu">${I.painel}</button></div>
+    lado.innerHTML = `<div class="lado__topo"><a class="lado__logo" href="../figma/index.html" aria-label="MedKi — site">MedKi</a><button class="lado__btn" type="button" id="lado-fecha" aria-label="${document.querySelector(".casca").classList.contains("is-mini") ? "Expandir menu" : "Recolher menu"}" aria-expanded="${!document.querySelector(".casca").classList.contains("is-mini")}">${I.painel}</button></div>
       <div class="lado__unidade"><b>${esc(u.nome.split("·")[0].trim())}</b>${esc((u.nome.split("·")[1] || "").trim())}</div>
       <nav class="lado__nav" id="lado-nav" aria-label="Seções do painel"><span class="lado__pilula" id="pilula" aria-hidden="true"></span>
-      ${itensNav().map(g => `<p class="lado__grupo">${g[0]}</p>` + g[1].map(it => `<a class="lado__item" href="${it[0]}" data-rota="${it[1]}">${it[3]}<span>${it[2]}</span>${it[4] ? `<span class="lado__conta${it[5] ? " lado__conta--alerta" : ""}">${it[4]}</span>` : ""}</a>`).join("")).join("")}
+      ${itensNav().map(g => `<p class="lado__grupo">${g[0]}</p>` + g[1].map(it => `<a class="lado__item" href="${it[0]}" data-rota="${it[1]}" title="${it[2]}">${it[3]}<span>${it[2]}</span>${it[4] ? `<span class="lado__conta${it[5] ? " lado__conta--alerta" : ""}">${it[4]}</span>` : ""}</a>`).join("")).join("")}
       </nav>
       <div class="lado__fim">
         <a class="lado__item" href="../figma/index.html">${I.grade}<span>Ir para o site</span></a>
@@ -134,8 +150,17 @@
         <p class="lado__sessao" id="sessao-resta">Sessão: 30 min</p>
       </div>`;
     $("#btn-sair").addEventListener("click", sair);
-    $("#lado-fecha").addEventListener("click", fechaLado);
+    $("#lado-fecha").addEventListener("click", alternaLado);
     lado.addEventListener("click", e => { if (e.target.closest(".lado__item[href]")) fechaLado(); });
+  }
+  // Celular: o botão fecha a gaveta. Computador: recolhe o menu só nos ícones, e a escolha fica salva
+  if (localStorage.getItem("medki-menu-mini")) document.querySelector(".casca").classList.add("is-mini");
+  function alternaLado() {
+    if (matchMedia("(max-width: 860px)").matches) return fechaLado();
+    const m = document.querySelector(".casca").classList.toggle("is-mini");
+    localStorage.setItem("medki-menu-mini", m ? "1" : "");
+    const b = $("#lado-fecha"); b.setAttribute("aria-label", m ? "Expandir menu" : "Recolher menu"); b.setAttribute("aria-expanded", String(!m));
+    setTimeout(() => window.dispatchEvent(new Event("resize")), 280);
   }
   let pilulaPronta = false;
   function marcaLado(rota) {
@@ -223,7 +248,7 @@
   }
 
   // ---------- peças reutilizáveis ----------
-  const kpis = itens => `<section class="card kpis" data-a="topo" aria-label="Resumo">${itens.map(k => `<div class="kpi"><span class="ico-q">${k[0]}</span><div class="kpi__txt"><small>${k[1]}</small><b><span data-num="${k[2]}" data-casas="${k[3] || 0}">${num(k[2], k[3] || 0)}</span>${k[4] ? `<em>${k[4]}</em>` : ""}</b></div>${k[5] ? `<span class="chip-s chip-s--${k[5][1]}">${k[5][0]}</span>` : ""}</div>`).join("")}</section>`;
+  const kpis = itens => `<section class="card kpis" data-a="topo" aria-label="Resumo">${itens.map(k => `<div class="kpi"><div class="kpi__txt"><small>${k[1]}</small><b><span data-num="${k[2]}" data-casas="${k[3] || 0}">${num(k[2], k[3] || 0)}</span>${k[4] ? `<em>${k[4]}</em>` : ""}</b>${k[5] ? `<span class="kpi__nota${k[5][1] === "alerta" ? " kpi__nota--alerta" : ""}">${k[5][0]}</span>` : ""}</div></div>`).join("")}</section>`;
   const cab = (ico, titulo, extra, link, escuro) => `<div class="card__cab"><span class="ico-q${escuro ? " ico-q--claro" : ""}">${ico}</span><h2>${titulo}</h2>${extra || ""}${link ? `<a class="card__mais" href="${link}" aria-label="Ver mais: ${titulo}">${I.tres}</a>` : ""}</div>`;
   function notaPrio(n) {
     const p = D.prioridade(n), nv = D.nivel(p.total), cls = { "Muito alta": "muito", "Alta": "alta", "Média": "media", "Normal": "normal" }[nv];
@@ -244,19 +269,19 @@
   // ações (ligadas uma única vez na tela)
   tela.addEventListener("click", e => {
     let b = e.target.closest("[data-avancar]");
-    if (b) { e.preventDefault(); const n = achar(b.dataset.avancar), r = D.avancar(n, usuario); if (r.erro) toast(r.erro, "erro"); else { toast("Status atualizado: " + n.status + ".", "ok"); recarrega(); } return; }
+    if (b) { e.preventDefault(); b.disabled = true; D.avancar(achar(b.dataset.avancar), usuario).then(r => { b.disabled = false; if (r.erro) toast(r.erro, "erro"); else { toast("Status atualizado: " + r.ok.status + ".", "ok"); recarrega(); } }); return; }
     b = e.target.closest("[data-sem-sucesso]"); if (b) { e.preventDefault(); semSucesso(achar(b.dataset.semSucesso)); return; }
     b = e.target.closest("[data-cancelar]"); if (b) { e.preventDefault(); cancelar(achar(b.dataset.cancelar)); }
   });
   function semSucesso(n) {
-    modal(`<h2 id="modal-t">Tentativa sem sucesso</h2><p class="sub" style="margin-top:10px">O aviso volta para <b>Pendente</b> e retorna à fila com a prioridade mantida.</p><div class="campo" style="margin-top:16px"><label for="m-nota">O que aconteceu? (opcional)</label><input class="inp" id="m-nota" placeholder="Ex.: ninguém em casa"></div><div class="modal__acoes"><button class="btn-p" type="button" data-fecha-modal>Voltar</button><button class="btn-p btn-p--azul" type="button" id="m-ok">Registrar tentativa</button></div>`, box => {
-      $("#m-ok", box).addEventListener("click", () => { const r = D.semSucesso(n, usuario, $("#m-nota", box).value.trim()); fechaModal(); if (r.erro) toast(r.erro, "erro"); else { toast("Tentativa registrada. O aviso voltou para a fila.", "ok"); recarrega(); } });
+    modal(`<h2 id="modal-t">Tentativa sem sucesso</h2><p class="sub" style="margin-top:10px">O aviso volta para <b>Pendente</b> e retorna à fila e os dias sem o remédio continuam contando.</p><div class="campo" style="margin-top:16px"><label for="m-nota">O que aconteceu? (obrigatório)</label><input class="inp" id="m-nota" placeholder="Ex.: ninguém em casa"></div><div class="modal__acoes"><button class="btn-p" type="button" data-fecha-modal>Voltar</button><button class="btn-p btn-p--azul" type="button" id="m-ok">Registrar tentativa</button></div>`, box => {
+      $("#m-ok", box).addEventListener("click", async () => { const r = await D.semSucesso(n, usuario, $("#m-nota", box).value.trim()); if (r.erro) { toast(r.erro, "erro"); $("#m-nota", box).focus(); return; } fechaModal(); if (r.erro) toast(r.erro, "erro"); else { toast("Tentativa registrada. O aviso voltou para a fila.", "ok"); recarrega(); } });
     });
   }
   function cancelar(n) {
     const obriga = usuario.perfil === "farmacia";
     modal(`<h2 id="modal-t">Cancelar aviso</h2><p class="sub" style="margin-top:10px">${esc(n.insumo)} · paciente ${esc(n.pacienteId)}. Um aviso cancelado não pode ser reaberto; se faltar de novo, será preciso um novo aviso.</p><div class="campo" style="margin-top:16px"><label for="m-motivo">Motivo${obriga ? " (obrigatório)" : " (opcional)"}</label><textarea class="inp" id="m-motivo" placeholder="${obriga ? "Ex.: medicamento substituído pela equipe médica" : "Ex.: o remédio chegou por outro meio"}"></textarea></div><div class="modal__acoes"><button class="btn-p" type="button" data-fecha-modal>Manter aviso</button><button class="btn-p btn-p--escuro" type="button" id="m-ok">Cancelar aviso</button></div>`, box => {
-      $("#m-ok", box).addEventListener("click", () => { const r = D.cancelar(n, usuario, $("#m-motivo", box).value); if (r.erro) { const c = $("#m-motivo", box).closest(".campo"); c.classList.add("erro"); if (!$(".msg-erro", c)) c.insertAdjacentHTML("beforeend", `<span class="msg-erro">${esc(r.erro)}</span>`); $("#m-motivo", box).focus(); return; } fechaModal(); toast("Aviso cancelado.", "ok"); recarrega(); });
+      $("#m-ok", box).addEventListener("click", async () => { const r = await D.cancelar(n, usuario, $("#m-motivo", box).value); if (r.erro) { const c = $("#m-motivo", box).closest(".campo"); c.classList.add("erro"); if (!$(".msg-erro", c)) c.insertAdjacentHTML("beforeend", `<span class="msg-erro">${esc(r.erro)}</span>`); $("#m-motivo", box).focus(); return; } fechaModal(); toast("Aviso cancelado.", "ok"); recarrega(); });
     });
   }
 
@@ -270,10 +295,10 @@
     const media = tempos.length ? tempos.reduce((a, b) => a + b, 0) / tempos.length : 0, noPrazo = tempos.filter(x => x <= 7).length, pct = tempos.length ? Math.round(noPrazo / tempos.length * 100) : 0;
     const pacs = D.pacientesDe(usuario).length, farm = usuario.perfil === "farmacia";
     let h = kpis([
-      [I.doc, farm ? "Avisos na fila" : "Avisos em aberto", abertos.length, 0, abertos.length === 1 ? " aviso" : " avisos", atras.length ? [atras.length + " em atraso", "alerta"] : ["em dia", "ok"]],
-      [I.relogio, "Tempo médio até a entrega", media, 1, " dias", [media <= 7 ? "no prazo" : "acima de 7 dias", media <= 7 ? "ok" : "aviso"]],
-      [I.caminhao, "Entregas no prazo", pct, 0, "%/100", ["meta 7 dias", "info"]],
-      [I.pacientes, farm ? "Pacientes na unidade" : "Pacientes", pacs, 0, farm ? "" : "/" + pacs, [farm ? "cadastrados" : usuario.perfil === "acs" ? "na microárea" : "vinculados", "info"]]
+      [I.doc, farm ? "Avisos na fila" : "Avisos em aberto", abertos.length, 0, "", atras.length ? [atras.length + " em atraso", "alerta"] : null],
+      [I.relogio, "Tempo médio até a entrega", media, 1, " dias"],
+      [I.caminhao, "Entregues em até 7 dias", pct, 0, "%"],
+      [I.pacientes, farm ? "Pacientes na unidade" : usuario.perfil === "acs" ? "Pacientes na microárea" : "Pacientes vinculados", pacs, 0, ""]
     ]);
     // tabela de avisos (como "Live Occupancy")
     const lista = abertos.concat(vis.filter(n => !D.emAberto(n)).sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))).slice(0, 6);
@@ -281,50 +306,26 @@
     const resumo = [cont("Pendente") + " pendente(s)", cont("Em separação") + " em separação", cont("Saiu para entrega") + " a caminho"].join(", ");
     h += `<div class="grade-dash-1"><section class="card" data-a>${cab(I.quadro, farm ? "Avisos mais urgentes" : "Avisos em andamento", `<span class="chip-n">${abertos.length}</span><small>${resumo}</small>`, farm ? "#/fila" : "#/avisos")}
       <div class="tab-wrap"><table class="tab-app"><thead><tr><th>Paciente</th><th>Insumo</th><th class="ocultar-m">Registrado por</th><th>Status</th><th>Protocolo</th></tr></thead><tbody>
-      ${lista.length ? lista.map(n => { const p = D.paciente(n.pacienteId), por = D.usuario(n.criadoPor) || { nome: "—" }; return `<tr data-a="linha"><td><a class="cel-pessoa" href="#/aviso/${n.id}">${av(ini(p.iniciais), p.id)}<span>${esc(p.iniciais)}<small>${p.id}</small></span></a></td><td>${esc(n.insumo)}</td><td class="ocultar-m"><span class="cel-pessoa" style="font-weight:400">${av(ini(por.nome), por.id || "x")}${esc(por.nome.split(" ")[0])}</span></td><td>${st(n.status)}${D.emAtraso(n) ? ' <span class="st st--atraso">Em atraso</span>' : ""}</td><td class="mono">${n.id}</td></tr>`; }).join("") : `<tr><td colspan="5"><div class="vazio"><b>Nenhum aviso por aqui</b>Quando um remédio de uso contínuo faltar, use “Avisar falta”.</div></td></tr>`}
+      ${lista.length ? lista.map(n => { const p = D.paciente(n.pacienteId), por = D.usuario(n.criadoPor) || { nome: "—" }; return `<tr data-a="linha"><td><a class="cel-pessoa" href="#/aviso/${n.id}" title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD)."><span>${p.id}<small>${esc(p.iniciais)}</small></span></a></td><td><span class="cel-item">${foto(n.categoria)}${esc(n.insumo)}</span></td><td class="ocultar-m"><span class="cel-pessoa" style="font-weight:400">${av(ini(por.nome), por.id || "x")}${esc(por.nome.split(" ")[0])}</span></td><td>${st(n.status)}${D.emAtraso(n) ? prazoVencido(n) : ""}</td><td class="mono">${n.id}</td></tr>`; }).join("") : `<tr><td colspan="5"><div class="vazio"><b>Nenhum aviso por aqui</b>Quando um remédio de uso contínuo faltar, use “Avisar falta”.</div></td></tr>`}
       </tbody></table></div></section>`;
     // gráfico de entregas por mês (como "Peak Activity")
     const meses = []; for (let k = 5; k >= 0; k--) { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - k); meses.push(d); }
     const porMes = meses.map(m => ent.filter(n => { const e = entregaEm(n); return e && e.getMonth() === m.getMonth() && e.getFullYear() === m.getFullYear(); }).length);
     const max = Math.max(1, ...porMes), topo = Math.max(4, Math.ceil(max / 2) * 2), imax = porMes.indexOf(Math.max(...porMes));
     h += `<section class="card" data-a>${cab(I.relogio, "Entregas por mês", "", farm ? "#/indicadores" : "#/historico")}
-      <div class="mini-stats"><div class="mini-stat"><b>2 dias úteis</b><small>1ª resposta</small></div><div class="mini-stat"><b>7 dias</b><small>prazo de entrega</small></div><div class="mini-stat"><b>${num(media, 1)} dias</b><small>média ${farm ? "da unidade" : "das suas"}</small></div></div>
       <div class="barras-v"><div class="barras-v__eixo"><span>${topo}</span><span>${topo / 2}</span><span>0</span></div><div class="barras-v__area">
       ${meses.map((m, i) => `<div class="barras-v__col"><div class="barras-v__barra${i === imax && porMes[i] ? " is-alto" : ""}" data-h="${Math.max(6, porMes[i] / topo * 100)}%" title="${porMes[i]} entrega(s)"></div><span>${m.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}</span></div>`).join("")}
-      </div></div>
-      <div class="faixa-grad"><span data-w="${pct}%"></span></div><div class="faixa-grad__leg"><span>Fora do prazo</span><span>${pct}% no prazo</span></div></section></div>`;
+      </div></div></section></div>`;
     // calendário, bolhas e atualizações
-    h += `<div class="grade-dash-2">${calendario(vis)}${bolhas(vis)}${atualizacoes()}</div>`;
+    h += `<div class="grade-dash-2 grade-dash-2--duas">${bolhas(vis)}${atualizacoes()}</div>`;
     tela.innerHTML = h;
   };
 
-  function calendario(vis) {
-    const hoje = new Date(), ano = hoje.getFullYear(), mes = hoje.getMonth(), dias = new Date(ano, mes + 1, 0).getDate(), ini0 = new Date(ano, mes, 1).getDay();
-    const chave = d => d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
-    const abertos = {}, entregues = {};
-    vis.forEach(n => { const c = new Date(n.criadoEm); abertos[chave(c)] = (abertos[chave(c)] || 0) + 1; const e = entregaEm(n); if (e) entregues[chave(e)] = 1; });
-    let cel = ["D", "S", "T", "Q", "Q", "S", "S"].map(d => `<span class="cal__dia-s">${d}</span>`).join("");
-    for (let i = 0; i < ini0; i++) cel += `<span class="cal__d cal__d--vazio"></span>`;
-    for (let d = 1; d <= dias; d++) {
-      const dt = new Date(ano, mes, d), k = chave(dt), w = dt.getDay(), passado = d < hoje.getDate();
-      let cls = "cal__d", txt = d, tit = "";
-      if (d === hoje.getDate()) { cls += " cal__d--hoje"; tit = "Hoje"; }
-      else if (!passado) cls += " cal__d--futuro";
-      else if (entregues[k]) { cls += " cal__d--ok"; txt = I.ok; tit = "Entrega realizada"; }
-      else if (abertos[k]) { cls += " cal__d--aviso"; tit = abertos[k] + " aviso(s) registrado(s)"; }
-      else if (w === 0 || w === 6) { cls += " cal__d--fds"; tit = "Fim de semana: não conta no prazo de dias úteis"; }
-      cel += `<span class="${cls}"${tit ? ` title="${tit}"` : ""}>${txt}</span>`;
-    }
-    const nomeMes = hoje.toLocaleDateString("pt-BR", { month: "long" });
-    return `<section class="card card--escuro" data-a>${cab(I.calendario, nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1) + " de " + ano, "", null, true)}<div class="cal" aria-label="Calendário do mês">${cel}</div>
-      <div class="cal__leg"><span><i style="background:rgba(255,255,255,.5)"></i>Aviso</span><span><i style="background:rgba(255,255,255,.25)"></i>Entrega</span><span><i style="background:var(--azul)"></i>Hoje</span></div></section>`;
-  }
   function bolhas(vis) {
     const tot = vis.length || 1, cats = Object.keys(D.CATEGORIAS).map(k => [k, vis.filter(n => n.categoria === k).length]).filter(x => x[1]).sort((a, b) => b[1] - a[1]);
-    const pos = [["2%", "8%"], ["56%", "0%"], ["40%", "60%"], ["80%", "52%"]];
-    return `<section class="card" data-a>${cab(I.gota, "Avisos por insumo", "", usuario.perfil === "farmacia" ? "#/indicadores" : "#/historico")}<div class="bolhas" role="img" aria-label="${cats.map(c => D.CATEGORIAS[c[0]].nome + " " + Math.round(c[1] / tot * 100) + "%").join(", ")}">
-      ${cats.map((c, i) => { const p = Math.round(c[1] / tot * 100), s = Math.max(34, Math.round(Math.sqrt(p / 100) * 160)), co = COR_CAT[c[0]]; return `<span class="bolha" style="left:${pos[i][0]};top:${pos[i][1]};width:${s}px;height:${s}px;background:${co[0]};color:${co[1]};font-size:${s > 80 ? "1.15rem" : ".72rem"};transition-delay:${i * 120}ms">${p}%</span>`; }).join("")}
-      </div><div class="leg-pilulas">${cats.map(c => `<span><i style="background:${COR_CAT[c[0]][1]}"></i>${D.CATEGORIAS[c[0]].nome}</span>`).join("")}</div></section>`;
+    return `<section class="card" data-a>${cab(I.gota, "Avisos por insumo", "", usuario.perfil === "farmacia" ? "#/indicadores" : "#/historico")}<div class="barras-h" aria-label="${cats.map(c => D.CATEGORIAS[c[0]].nome + " " + Math.round(c[1] / tot * 100) + "%").join(", ")}">
+      ${cats.map(c => { const p = Math.round(c[1] / tot * 100); return `<div><p><span>${D.CATEGORIAS[c[0]].nome}</span><b>${p}%</b></p><div class="barras-h__f"><span data-w="${p}%"></span></div></div>`; }).join("")}
+      </div></section>`;
   }
   function atualizacoes() {
     const ev = eventos().slice(0, 5);
@@ -338,26 +339,25 @@
   R.avisos = () => {
     const farm = usuario.perfil === "farmacia", vis = D.visiveis(usuario), abertos = D.fila(vis.filter(D.emAberto));
     const ent30 = vis.filter(n => n.status === "Entregue" && Date.now() - entregaEm(n) < 30 * 864e5).sort((a, b) => entregaEm(b) - entregaEm(a));
-    const t30 = ent30.map(diasEntrega), media30 = t30.length ? t30.reduce((a, b) => a + b, 0) / t30.length : 0, ok30 = t30.filter(x => x <= 7).length, pct30 = t30.length ? Math.round(ok30 / t30.length * 100) : 0;
+    const t30 = ent30.map(diasEntrega), ok30 = t30.filter(x => x <= 7).length, pct30 = t30.length ? Math.round(ok30 / t30.length * 100) : 0;
     const atras = abertos.filter(n => D.emAtraso(n)), semana = abertos.filter(n => Date.now() - new Date(n.criadoEm) < 7 * 864e5).length;
     const diasMed = abertos.length ? abertos.reduce((a, n) => a + D.diasSem(n), 0) / abertos.length : 0;
     let h = kpis([
-      [I.doc, "Em aberto agora", abertos.length, 0, abertos.length === 1 ? " aviso" : " avisos", ["+" + semana + " nesta semana", "info"]],
-      [I.relogio, "Média de dias sem o insumo", diasMed, 1, " dias", [diasMed <= 7 ? "dentro do prazo" : "acima do prazo", diasMed <= 7 ? "ok" : "aviso"]],
-      [I.alerta, "Em atraso", atras.length, 0, "", atras.length ? ["prazo vencido", "alerta"] : ["nenhum", "ok"]],
-      [I.caminhao, "Entregues em 30 dias", ent30.length, 0, "", [pct30 + "% no prazo", "ok"]]
+      [I.doc, "Em aberto", abertos.length, 0, ""],
+      [I.relogio, "Média de dias sem o insumo", diasMed, 1, ""],
+      [I.alerta, "Em atraso", atras.length, 0, "", atras.length ? ["prazo vencido", "alerta"] : null],
+      [I.caminhao, "Entregues em 30 dias", ent30.length, 0, "", t30.length ? [pct30 + "% em até 7 dias", "info"] : null]
     ]);
     const grupos = farm ? Array.from(new Set(abertos.map(n => D.paciente(n.pacienteId).microarea))).sort().map(a => ["area:" + a, "Microárea " + a]) : D.pacientesDe(usuario).map(p => ["pac:" + p.id, p.iniciais + " · " + p.id]);
     const conta = f => abertos.filter(f).length;
     h += `<div class="filtros-chip" data-a role="group" aria-label="Filtrar por ${farm ? "microárea" : "paciente"}"><button class="fchip${!foco.grupo ? " is-on" : ""}" type="button" data-grupo="">Todos</button>${grupos.map(g => `<button class="fchip${foco.grupo === g[0] ? " is-on" : ""}" type="button" data-grupo="${g[0]}">${esc(g[1])}</button>`).join("")}<span class="filtros-sep"></span>
       <label class="sr-only" for="f-cat">Insumo</label><select class="filtro-sel" id="f-cat"><option value="">Insumo: todos</option>${Object.keys(D.CATEGORIAS).map(k => `<option value="${k}"${foco.cat === k ? " selected" : ""}>${D.CATEGORIAS[k].nome}</option>`).join("")}</select>
-      <span class="mostrando" id="mostrando"></span></div>
-      <div class="filtros-chip" data-a role="group" aria-label="Destacar avisos">${[["atraso", "Em atraso", conta(n => D.emAtraso(n))], ["alta", "Prioridade alta", conta(n => D.prioridade(n).total >= 8)], ["Pendente", "Pendente", conta(n => n.status === "Pendente")], ["Em separação", "Em separação", conta(n => n.status === "Em separação")], ["Saiu para entrega", "Saiu para entrega", conta(n => n.status === "Saiu para entrega")]].map(m => `<button class="fchip fchip--linha${foco.marca === m[0] ? " is-on" : ""}" type="button" data-marca="${m[0]}">${m[1]} <span class="chip-n">${m[2]}</span></button>`).join("")}</div>`;
-    const colunas = [["Pendente", "resposta em 2 dias úteis"], ["Em separação", "em preparo"], ["Saiu para entrega", "a caminho"]];
-    h += `<div class="quadro">` + colunas.map(c => { const itens = abertos.filter(n => n.status === c[0]); return `<section class="coluna" data-a aria-label="${c[0]}"><div class="coluna__cab"><h3>${c[0]}</h3><span class="chip-n">${itens.length}</span><small>${c[1]}</small></div>${itens.length ? itens.map(cartaoQuadro).join("") : `<p class="coluna__vazio">Nenhum aviso nesta etapa.</p>`}${c[0] === "Pendente" && !farm ? `<a class="coluna__add" href="#/falta/nova">+ Avisar falta</a>` : ""}</section>`; }).join("") +
-      `<section class="coluna coluna--fim" data-a aria-label="Entregues"><div class="coluna__cab"><h3>Entregues</h3><span class="chip-n">${ent30.length}</span><small>últimos 30 dias</small></div>
-      <div class="resumo-col"><h4>Até agora</h4><p>Entregues <b>${ent30.length}</b></p><p>No prazo de 7 dias <b>${ok30}</b></p><p>Tempo médio <b>${num(media30, 1)} dias</b></p><div class="progresso"><span data-w="${pct30}%"></span></div><p style="font-size:.76rem">${pct30}% entregues no prazo</p></div>
-      ${ent30.slice(0, 3).map(n => { const p = D.paciente(n.pacienteId), d = diasEntrega(n); return `<a class="cartao-av" href="#/aviso/${n.id}" data-pac="${p.id}" data-area="${p.microarea}" data-cat="${n.categoria}"><div class="cartao-av__topo">${av(ini(p.iniciais), p.id)}<div><b>${esc(n.insumo)}</b><small>${esc(p.iniciais)} · ${p.id}</small></div></div><div class="cartao-av__meta"><span>${dataCurta(entregaEm(n))}</span><span class="tempo ${d <= 7 ? "tempo--ok" : ""}">${I.relogio}${num(d, 0)} d</span></div></a>`; }).join("")}</section></div>`;
+      <span class="filtros-sep"></span>${[["atraso", "Em atraso", conta(n => D.emAtraso(n))], ["alta", "Prioridade alta", conta(n => D.prioridade(n).total >= 8)]].map(m => `<button class="fchip fchip--linha${foco.marca === m[0] ? " is-on" : ""}" type="button" data-marca="${m[0]}">${m[1]} <span class="chip-n">${m[2]}</span></button>`).join("")}
+      <span class="mostrando" id="mostrando"></span></div>`;
+    const colunas = [["Pendente"], ["Em separação"], ["Saiu para entrega"]];
+    h += `<div class="quadro">` + colunas.map(c => { const itens = abertos.filter(n => n.status === c[0]); return `<section class="coluna" data-a aria-label="${c[0]}"><div class="coluna__cab"><h3>${c[0]}</h3><span class="chip-n">${itens.length}</span></div>${itens.length ? itens.map(cartaoQuadro).join("") : `<p class="coluna__vazio">Nenhum aviso nesta etapa.</p>`}${c[0] === "Pendente" && !farm ? `<a class="coluna__add" href="#/falta/nova">+ Avisar falta</a>` : ""}</section>`; }).join("") +
+      `<section class="coluna coluna--fim" data-a aria-label="Entregues"><div class="coluna__cab"><h3>Entregues</h3><span class="chip-n">${ent30.length}</span><small>30 dias</small></div>
+      ${ent30.slice(0, 3).map(n => { const p = D.paciente(n.pacienteId), d = diasEntrega(n); return `<a class="cartao-av" href="#/aviso/${n.id}" data-pac="${p.id}" data-area="${p.microarea}" data-cat="${n.categoria}"><div class="cartao-av__topo">${foto(n.categoria)}<div><b>${esc(n.insumo)}</b><small>${pacTxt(p)}</small></div></div><div class="cartao-av__meta"><span>Entregue ${dataCurta(entregaEm(n))}</span><span class="tempo${d > 7 ? " tempo--alerta" : ""}">em ${num(d, 0)} ${d === 1 ? "dia" : "dias"}</span></div></a>`; }).join("")}</section></div>`;
     tela.innerHTML = h;
     aplicaFoco();
     tela.querySelectorAll("[data-grupo]").forEach(b => b.addEventListener("click", () => { foco.grupo = b.dataset.grupo; $$("[data-grupo]", tela).forEach(x => x.classList.toggle("is-on", x === b)); aplicaFoco(); }));
@@ -366,12 +366,12 @@
   };
   function cartaoQuadro(n) {
     const p = D.paciente(n.pacienteId), atr = D.emAtraso(n), dias = D.diasSem(n), pr = D.prioridade(n);
-    const nota = atr ? `<div class="nota-alerta">${I.alerta}<span>${n.status === "Pendente" ? "Sem resposta da farmácia no prazo de 2 dias úteis." : "Passou do prazo de 7 dias para a entrega."} ${usuario.perfil === "farmacia" ? "Priorize este aviso." : "A farmácia já foi alertada."}</span></div>` : (n.tentativas ? `<div class="nota-alerta">${I.alerta}<span>${n.tentativas} tentativa(s) de entrega sem sucesso.</span></div>` : "");
+    const nota = atr ? `<p class="nota-alerta">${motivoAtraso(n)}</p>` : (n.tentativas ? `<p class="nota-info">${n.tentativas} ${n.tentativas === 1 ? "tentativa" : "tentativas"} sem sucesso</p>` : "");
     let acoes = acoesAviso(n, true);
     if (!acoes && n.status === "Saiu para entrega") acoes = `<a class="btn-p btn-p--azul btn-p--bloco" href="#/aviso/${n.id}">Acompanhar entrega</a>`;
     return `<article class="cartao-av" data-id="${n.id}" data-pac="${p.id}" data-area="${p.microarea}" data-cat="${n.categoria}" data-status="${n.status}" data-atraso="${atr ? 1 : 0}" data-alta="${pr.total >= 8 ? 1 : 0}">
-      <div class="cartao-av__topo">${av(ini(p.iniciais), p.id)}<a href="#/aviso/${n.id}"><b>${esc(n.insumo)}</b><small>${esc(p.iniciais)} · ${p.id}${usuario.perfil === "farmacia" ? " · microárea " + esc(p.microarea) : ""}</small></a></div>
-      <div class="cartao-av__meta"><span class="mono">${n.id}</span><span class="tempo${atr ? " tempo--alerta" : ""}" title="Dias sem o insumo">${I.relogio}${dias} d</span><span title="Prioridade">prioridade ${pr.total}</span></div>
+      <div class="cartao-av__topo">${foto(n.categoria)}<a href="#/aviso/${n.id}"><b>${esc(n.insumo)}</b><small>${pacTxt(p, usuario.perfil === "farmacia")}</small></a></div>
+      <div class="cartao-av__meta"><span class="mono" title="Protocolo do aviso">${n.id}</span><span class="tempo${atr ? " tempo--alerta" : ""}">${dias} ${dias === 1 ? "dia" : "dias"} sem</span><span class="prio" title="Prioridade: ${pr.peso} do insumo + ${pr.dias} de dias + ${pr.extra} de 5 ou mais remédios">${pr.total}<small> pts</small></span></div>
       ${nota}${acoes ? `<div class="cartao-av__acoes">${acoes}</div>` : ""}</article>`;
   }
   function aplicaFoco() {
@@ -400,7 +400,7 @@
         <span class="mostrando" aria-live="polite">${lista.length} de ${todos.length} avisos</span></form>
       <section class="card" data-a style="margin-top:14px">${cab(I.lista, "Fila por prioridade", `<span class="chip-n">${lista.length}</span><small>recalculada todo dia · empate: o mais antigo primeiro</small>`)}
       <div class="tab-wrap"><table class="tab-app"><thead><tr><th>Prioridade</th><th>Insumo</th><th>Paciente</th><th class="ocultar-m">Sem o insumo</th><th>Status</th><th>Ações</th></tr></thead><tbody>
-      ${lista.length ? lista.map(n => { const p = D.paciente(n.pacienteId), atr = D.emAtraso(n); return `<tr class="fila-linha" data-a="linha"><td>${notaPrio(n)}</td><td><a href="#/aviso/${n.id}"><b style="font-weight:600">${esc(n.insumo)}</b><br><span class="mono">${n.id}</span></a></td><td><span class="cel-pessoa">${av(ini(p.iniciais), p.id)}<span>${esc(p.iniciais)}<small>${p.id} · microárea ${esc(p.microarea)}</small></span></span></td><td class="ocultar-m"><span class="tempo${atr ? " tempo--alerta" : ""}">${I.relogio}${D.diasSem(n)} dias</span></td><td>${st(n.status)}${atr ? ' <span class="st st--atraso">Em atraso</span>' : ""}${n.tentativas ? `<br><small style="color:var(--ap-txt3)">${n.tentativas} tentativa(s) sem sucesso</small>` : ""}</td><td><div class="cartao-av__acoes">${acoesAviso(n)}</div></td></tr>`; }).join("") : `<tr><td colspan="6"><div class="vazio"><b>Nenhum aviso com esses filtros</b>Tente outros filtros.</div></td></tr>`}
+      ${lista.length ? lista.map(n => { const p = D.paciente(n.pacienteId), atr = D.emAtraso(n); return `<tr class="fila-linha" data-a="linha"><td>${notaPrio(n)}</td><td><span class="cel-item">${foto(n.categoria)}<a href="#/aviso/${n.id}"><b style="font-weight:600">${esc(n.insumo)}</b><br><span class="mono" title="Protocolo do aviso">${n.id}</span></a></span></td><td><span class="cel-pessoa" title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD)."><span>${p.id}<small>${esc(p.iniciais)} · microárea ${esc(p.microarea)}</small></span></span></td><td class="ocultar-m"><span class="tempo${atr ? " tempo--alerta" : ""}">${I.relogio}${D.diasSem(n)} ${D.diasSem(n) === 1 ? "dia" : "dias"}</span></td><td>${st(n.status)}${atr ? prazoVencido(n) : ""}${n.tentativas ? `<br><small style="color:var(--ap-txt3)">${n.tentativas} tentativa(s) sem sucesso</small>` : ""}</td><td><div class="cartao-av__acoes">${acoesAviso(n)}</div></td></tr>`; }).join("") : `<tr><td colspan="6"><div class="vazio"><b>Nenhum aviso com esses filtros</b>Tente outros filtros.</div></td></tr>`}
       </tbody></table></div></section>`;
     $("#filtros").addEventListener("change", () => { filtro.status = $("#f-st").value; filtro.categoria = $("#f-cat2").value; filtro.microarea = $("#f-area").value; R.fila(); });
     $("#f-atr").addEventListener("click", () => { filtro.atraso = !filtro.atraso; R.fila(); });
@@ -437,12 +437,59 @@
       if (b.dataset.sug === "outro") { localStorage.setItem(chaveRasc(), JSON.stringify({ passo: 1, pacienteId: pacs.length === 1 ? pacs[0].id : "", insumo: "", categoria: "", outro: "", dataFalta: hojeISO(), observacao: "" })); location.hash = "#/falta/passo"; return; }
       const x = sug[+b.dataset.sug]; comeca(x.p, x.m);
     }));
+    // Conversa: entende o pedido escrito do jeito da pessoa, pergunta só o que faltar e confirma antes de enviar (RNF03)
+    let pedido = null, obs = "";
+    const conversa = () => {
+      let c = $("#conversa");
+      if (!c) { const g = $(".assist__grade", tela); if (g) g.remove(); $$(".assist__sub", tela).forEach(x => x.remove()); c = document.createElement("div"); c.id = "conversa"; c.className = "conversa"; c.setAttribute("aria-live", "polite"); $("#assist-form").before(c); }
+      return c;
+    };
+    const fala = (quem, html) => { const c = conversa(); c.insertAdjacentHTML("beforeend", `<div class="msg msg--${quem}">${html}</div>`); const m = c.lastElementChild; c.scrollTop = c.scrollHeight; return m; };
+    const nomePac = id => { const p = D.paciente(id); return p ? `${p.id} (${esc(p.iniciais)})` : esc(id); };
+    function pergunta(texto, opcoes, escolhe) {
+      const m = fala("medki", `<p>${texto}</p><div class="msg__opcoes">${opcoes.map((x, i) => `<button class="msg__opcao" type="button" data-op="${i}">${x[0]}</button>`).join("")}</div>`);
+      $$("[data-op]", m).forEach(b => b.addEventListener("click", () => { $$("[data-op]", m).forEach(x => { x.disabled = true; }); b.classList.add("is-on"); fala("eu", `<p>${b.innerHTML}</p>`); escolhe(opcoes[+b.dataset.op][1]); }));
+    }
+    function segue() {
+      const r = pedido;
+      if (r.opcoesItem) { const ops = r.opcoesItem; delete r.opcoesItem; return pergunta("Encontrei mais de um item. Qual faltou?", ops.map(x => [`${esc(x.insumo)} · ${nomePac(x.paciente)}`, x]), x => { Object.assign(pedido, { paciente: x.paciente, insumo: x.insumo, categoria: x.categoria, novo: false }); segue(); }); }
+      if (!r.paciente) { const ops = r.opcoesPaciente || pacs.map(p => p.id); delete r.opcoesPaciente; return pergunta("Para qual paciente?", ops.map(id => [nomePac(id), id]), id => { pedido.paciente = id; segue(); }); }
+      if (!r.insumo) return fala("medki", `<p>Qual remédio ou insumo faltou para ${nomePac(r.paciente)}? Pode escrever do seu jeito.</p>`);
+      if (r.novo && !r.categoria) return pergunta(`“${esc(r.insumo)}” não está na lista de uso contínuo. Que tipo de item é?`, Object.keys(D.CATEGORIAS).map(k => [D.CATEGORIAS[k].nome, k]), k => { pedido.categoria = k; segue(); });
+      const dup = D.abertaPara(r.paciente, r.insumo);
+      if (dup) { pedido = null; return fala("medki", `<p>Já existe um aviso em aberto de <b>${esc(dup.insumo)}</b> para ${nomePac(dup.pacienteId)} (${esc(dup.status)}). Não precisa avisar de novo.</p><a class="btn-p" href="#/aviso/${dup.id}">Acompanhar aviso ${dup.id}</a>`); }
+      resumo();
+    }
+    function resumo() {
+      const r = pedido, pr = D.prioridade({ pacienteId: r.paciente, categoria: r.categoria, dataFalta: r.dataFalta });
+      const m = fala("medki", `<p>Entendi assim. Confere?</p><dl class="msg__resumo"><dt>Paciente</dt><dd>${nomePac(r.paciente)}</dd><dt>Faltou</dt><dd>${esc(r.insumo)} <small>${D.CATEGORIAS[r.categoria].nome}</small></dd><dt>Sem o insumo desde</dt><dd><input class="inp msg__data" type="date" max="${hojeISO()}" value="${r.dataFalta}" aria-label="Data em que o insumo acabou">${r.dataDita ? "" : "<small>você não disse o dia; ajuste se não foi hoje</small>"}</dd><dt>Prioridade estimada</dt><dd>${pr.total} pontos</dd></dl><div class="msg__acoes"><button class="btn-p btn-p--azul" type="button" data-envia>Enviar aviso</button><button class="btn-p" type="button" data-corrige>Corrigir nos campos</button></div>`);
+      $(".msg__data", m).addEventListener("change", e => { r.dataFalta = e.target.value; });
+      $("[data-corrige]", m).addEventListener("click", () => { localStorage.setItem(chaveRasc(), JSON.stringify({ passo: 1, pacienteId: r.paciente, insumo: r.novo ? "__outro" : r.insumo, categoria: r.categoria, outro: r.novo ? r.insumo : "", dataFalta: r.dataFalta, observacao: obs })); location.hash = "#/falta/passo"; });
+      $("[data-envia]", m).addEventListener("click", async e => {
+        const b = e.currentTarget;
+        if (!r.dataFalta || r.dataFalta > hojeISO()) return toast("Informe uma data que não seja no futuro.", "erro");
+        b.disabled = true;
+        const dados = { pacienteId: r.paciente, insumo: r.insumo, categoria: r.categoria, dataFalta: r.dataFalta, observacao: obs };
+        const res = await D.registrar(dados, usuario);
+        if (res.semConexao) {  // RNF08: guarda e reenvia quando a internet voltar
+          localStorage.setItem(chaveRasc(), JSON.stringify({ passo: 3, pacienteId: r.paciente, insumo: r.novo ? "__outro" : r.insumo, categoria: r.categoria, outro: r.novo ? r.insumo : "", dataFalta: r.dataFalta, observacao: obs, pendenteEnvio: true }));
+          toast("Sem conexão. Seu aviso está salvo e será enviado quando a internet voltar.", "erro"); location.hash = "#/falta/passo"; return;
+        }
+        if (res.duplicada) { $$("button", m).forEach(x => { x.disabled = true; }); pedido = null; return fala("medki", `<p>Alguém já avisou essa falta. Acompanhe pelo aviso existente.</p><a class="btn-p" href="#/aviso/${res.duplicada.id}">Ver aviso ${res.duplicada.id}</a>`); }
+        if (res.erro) { b.disabled = false; return fala("medki", `<p>${esc(res.erro)}</p>`); }
+        $$("button, input", m).forEach(x => { x.disabled = true; });
+        localStorage.removeItem(chaveRasc()); pedido = null; obs = ""; montaLado(); anuncia("Aviso enviado. Protocolo " + res.ok.id);
+        fala("medki", `<p><b>Aviso enviado à farmácia.</b> Protocolo ${res.ok.id} · prioridade ${res.ok.prioridade.total}. A primeira resposta vem em até ${D.db().unidade.prazoRespostaUteis} dias úteis.</p><a class="btn-p btn-p--azul" href="#/aviso/${res.ok.id}">Acompanhar aviso</a>`);
+      });
+    }
     $("#assist-form").addEventListener("submit", e => {
       e.preventDefault(); const txt = $("#assist-txt").value.trim(); if (!txt) { $("#assist-txt").focus(); return; }
-      const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""), t = norm(txt);
-      let achou = null; pacs.forEach(p => p.medicamentos.forEach(m => { const chave = norm(m.nome).split(" ")[0]; if (!achou && chave.length > 3 && t.indexOf(chave) >= 0 && (pacs.length === 1 || t.indexOf(norm(p.iniciais).replace(/[^a-z]/g, "").slice(0, 1)) >= 0 || pacs.filter(q => q.medicamentos.some(mm => norm(mm.nome).split(" ")[0] === chave)).length === 1)) achou = { p, m }; }));
-      if (achou) return comeca(achou.p, achou.m);
-      localStorage.setItem(chaveRasc(), JSON.stringify({ passo: 1, pacienteId: pacs.length === 1 ? pacs[0].id : "", insumo: pacs.length === 1 ? "__outro" : "", categoria: "outro", outro: txt.slice(0, 60), dataFalta: hojeISO(), observacao: "" })); location.hash = "#/falta/passo";
+      fala("eu", `<p>${esc(txt)}</p>`); $("#assist-txt").value = "";
+      // Uma nova mensagem completa o pedido em andamento em vez de começar outro
+      const antes = pedido ? { paciente: pedido.paciente, insumo: pedido.insumo, categoria: pedido.categoria, novo: pedido.novo, dataFalta: pedido.dataDita ? pedido.dataFalta : "", dataDita: pedido.dataDita } : null;
+      pedido = MedKiInterpreta.interpretar(txt, pacs, new Date(), antes);
+      obs = (obs ? obs + " / " : "") + txt; obs = obs.slice(0, 500);
+      segue();
     });
     $("#assist-txt").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#assist-form").requestSubmit(); } });
   };
@@ -491,14 +538,15 @@
       });
       const foco = $("#wiz input:checked, #wiz input, #wiz textarea"); if (foco && r.passo > 1) foco.focus({ preventScroll: true });
     }
-    function enviar() {
+    async function enviar() {
       if (!navigator.onLine) { toast("Sem conexão. Seu aviso está salvo e será enviado quando a internet voltar.", "erro"); r.pendenteEnvio = true; guarda(); return; }
       const p = D.paciente(r.pacienteId), cat = r.insumo === "__outro" ? r.categoria : (p.medicamentos.filter(m => m.nome === r.insumo)[0] || {}).categoria;
-      const res = D.registrar({ pacienteId: r.pacienteId, insumo: r.insumo === "__outro" ? r.outro : r.insumo, categoria: cat || "outro", dataFalta: r.dataFalta, observacao: r.observacao }, usuario);
+      const res = await D.registrar({ pacienteId: r.pacienteId, insumo: r.insumo === "__outro" ? r.outro : r.insumo, categoria: cat || "outro", dataFalta: r.dataFalta, observacao: r.observacao }, usuario);
+      if (res.semConexao) { toast("Sem conexão. Seu aviso está salvo e será enviado quando a internet voltar.", "erro"); r.pendenteEnvio = true; guarda(); return; }
       if (res.duplicada) return mostraDuplicada(res.duplicada);
       if (res.erro) return toast(res.erro, "erro");
       localStorage.removeItem(chaveRasc()); const n = res.ok, pr = D.prioridade(n);
-      tela.innerHTML = `<div class="passo-card"><section class="card sucesso" data-a><span class="sucesso__icone">${I.ok}</span><h2>Aviso enviado à farmácia</h2><p class="sub" style="margin-top:8px">Protocolo <b>${n.id}</b> · prioridade ${pr.total} (${D.nivel(pr.total)}).</p><p class="sub">Você acompanha cada etapa por aqui. Primeira resposta em até 2 dias úteis.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn-p btn-p--azul" href="#/aviso/${n.id}">Acompanhar aviso</a><a class="btn-p" href="#/avisos">Ver meus avisos</a></div></section></div>`;
+      tela.innerHTML = `<div class="passo-card"><section class="card sucesso" data-a><span class="sucesso__icone">${I.ok}</span><h2>Aviso enviado à farmácia</h2><p class="sub" style="margin-top:8px">Protocolo <b>${n.id}</b> · prioridade ${pr.total} (${D.nivel(pr.total)}).</p><p class="sub">Você acompanha cada etapa por aqui. Primeira resposta em até ${D.db().unidade.prazoRespostaUteis} dias úteis.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn-p btn-p--azul" href="#/aviso/${n.id}">Acompanhar aviso</a><a class="btn-p" href="#/avisos">Ver meus avisos</a></div></section></div>`;
       animaEntrada(tela); montaLado(); marcaLado("falta"); anuncia("Aviso enviado. Protocolo " + n.id);
     }
     window.addEventListener("online", function on() { window.removeEventListener("online", on); const x = JSON.parse(localStorage.getItem(chaveRasc()) || "null"); if (x && x.pendenteEnvio && location.hash.indexOf("#/falta/passo") === 0) { r = x; delete r.pendenteEnvio; enviar(); } else if (location.hash.indexOf("#/falta/passo") === 0) pinta(); });
@@ -512,8 +560,8 @@
     if (!n || D.visiveis(usuario).indexOf(n) < 0) { tela.innerHTML = `<section class="card" data-a><div class="vazio"><b>Aviso não encontrado</b>Você só vê avisos dos pacientes aos quais tem acesso. <a class="link-btn" href="#/">Voltar</a></div></section>`; return { titulo: "Aviso" }; }
     const p = D.paciente(n.pacienteId), pr = D.prioridade(n), acoes = D.emAberto(n) ? acoesAviso(n) : "";
     tela.innerHTML = `<div data-a><a class="btn-p" href="#/${usuario.perfil === "farmacia" ? "fila" : "avisos"}">${I.volta}Voltar</a></div>
-      <div class="grade-lado"><section class="card" data-a>${cab(ICO_STATUS[n.status] || I.doc, "Situação", `${st(n.status)}${D.emAtraso(n) ? ' <span class="st st--atraso">Em atraso</span>' : ""}`)}${trilha(n)}
-        <dl class="revisao" style="margin-top:18px"><dt>Paciente</dt><dd><span class="cel-pessoa">${av(ini(p.iniciais), p.id)}${esc(p.iniciais)} · ${p.id} · microárea ${esc(p.microarea)}</span></dd><dt>Categoria</dt><dd>${esc(D.CATEGORIAS[n.categoria].nome)}</dd><dt>Sem o insumo desde</dt><dd>${data(n.dataFalta + "T12:00:00")}${D.emAberto(n) ? ` (${D.diasSem(n)} dias)` : ""}</dd><dt>Aberto em</dt><dd>${dataHora(n.criadoEm)}</dd><dt>Registrado por</dt><dd>${esc((D.usuario(n.criadoPor) || {}).nome || "—")}</dd><dt>Observação</dt><dd>${n.observacao ? esc(n.observacao) : "—"}</dd>
+      <div class="grade-lado"><section class="card" data-a>${cab(ICO_STATUS[n.status] || I.doc, "Situação", `${st(n.status)}${D.emAtraso(n) ? prazoVencido(n) : ""}`)}${trilha(n)}
+        <dl class="revisao" style="margin-top:18px"><dt>Paciente</dt><dd><span class="cel-pessoa" title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD).">${p.id} (${esc(p.iniciais)}) · microárea ${esc(p.microarea)}</span></dd><dt>Categoria</dt><dd>${esc(D.CATEGORIAS[n.categoria].nome)}</dd><dt>Sem o insumo desde</dt><dd>${data(n.dataFalta + "T12:00:00")}${D.emAberto(n) ? ` (${D.diasSem(n)} dias)` : ""}</dd><dt>Aberto em</dt><dd>${dataHora(n.criadoEm)}</dd><dt>Registrado por</dt><dd>${esc((D.usuario(n.criadoPor) || {}).nome || "—")}</dd><dt>Observação</dt><dd>${n.observacao ? esc(n.observacao) : "—"}</dd>
         ${D.emAberto(n) ? `<dt>Prioridade</dt><dd>${pr.total} pontos: ${pr.peso} do insumo + ${pr.dias} dia(s) + ${pr.extra} (5+ remédios)</dd>` : ""}${n.tentativas ? `<dt>Tentativas sem sucesso</dt><dd>${n.tentativas}</dd>` : ""}${n.motivoCancelamento ? `<dt>Motivo do cancelamento</dt><dd>${esc(n.motivoCancelamento)}</dd>` : ""}</dl>
         ${acoes ? `<div class="cartao-av__acoes" style="margin-top:18px">${acoes}</div>` : ""}</section>
         <section class="card" data-a>${cab(I.relogio, "Histórico", `<small>não pode ser alterado</small>`)}<ol class="linha-tempo">${n.historico.slice().reverse().map(h => `<li data-a="linha"><div>${st(h.status)}<b>${esc(h.nota || "Status atualizado")}</b><small>${dataHora(h.data)} · ${esc((D.usuario(h.usuario) || {}).nome || "Sistema")}</small></div></li>`).join("")}</ol></section></div>`;
@@ -532,7 +580,7 @@
     const titulo = usuario.perfil === "acs" ? "Pacientes da microárea " + esc(usuario.microarea) : usuario.perfil === "farmacia" ? "Pacientes da unidade" : "Seus pacientes";
     let tabela;
     if (aba === "lista") tabela = `<section class="card" data-a>${cab(I.pacientes, titulo, `<span class="chip-n">${pacs.length}</span><small>só código e iniciais (LGPD)</small>`)}<div class="tab-wrap"><table class="tab-app"><thead><tr><th>Paciente</th><th>Remédios de uso contínuo</th><th class="ocultar-m">Familiares</th><th>Em aberto</th><th class="ocultar-m">Último aviso</th><th>Situação</th></tr></thead><tbody>
-      ${pacs.map(p => { const ns = D.db().notificacoes.filter(n => n.pacienteId === p.id), ab = ns.filter(D.emAberto), atr = ab.some(n => D.emAtraso(n)), ult = ns.sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))[0]; return `<tr data-a="linha"><td><span class="cel-pessoa">${av(ini(p.iniciais), p.id, 1)}<span>${esc(p.iniciais)}<small>${p.id} · microárea ${esc(p.microarea)}</small></span></span></td><td>${p.medicamentos.length} item(ns)<br><small style="color:var(--ap-txt3)">${esc(p.medicamentos.slice(0, 2).map(m => m.nome).join(", "))}${p.medicamentos.length > 2 ? "…" : ""}</small></td><td class="ocultar-m">${esc(p.vinculos.map(v => (D.usuario(v) || {}).nome || "").join(", ") || "—")}</td><td>${ab.length || "—"}</td><td class="ocultar-m">${ult ? dataCurta(ult.criadoEm) : "—"}</td><td>${atr ? '<span class="st st--atraso">Em atraso</span>' : ab.length ? '<span class="st st--pendente">Com falta</span>' : '<span class="st st--entregue">Em dia</span>'}</td></tr>`; }).join("")}
+      ${pacs.map(p => { const ns = D.db().notificacoes.filter(n => n.pacienteId === p.id), ab = ns.filter(D.emAberto), atr = ab.some(n => D.emAtraso(n)), ult = ns.sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))[0]; return `<tr data-a="linha"><td><span class="cel-pessoa" title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD)."><span>${p.id}<small>${esc(p.iniciais)} · microárea ${esc(p.microarea)}</small></span></span></td><td>${p.medicamentos.length} item(ns)<br><small style="color:var(--ap-txt3)">${esc(p.medicamentos.slice(0, 2).map(m => m.nome).join(", "))}${p.medicamentos.length > 2 ? "…" : ""}</small></td><td class="ocultar-m">${esc(p.vinculos.map(v => (D.usuario(v) || {}).nome || "").join(", ") || "—")}</td><td>${ab.length || "—"}</td><td class="ocultar-m">${ult ? dataCurta(ult.criadoEm) : "—"}</td><td>${atr ? '<span class="st st--atraso">Em atraso</span>' : ab.length ? '<span class="st st--pendente">Com falta</span>' : '<span class="st st--entregue">Em dia</span>'}</td></tr>`; }).join("")}
       </tbody></table></div></section>`;
     else tabela = `<section class="card" data-a>${cab(I.farmacia, "Remédios e insumos de uso contínuo", `<small>peso na fila de prioridade</small>`)}<div class="tab-wrap"><table class="tab-app"><thead><tr><th>Remédio ou insumo</th><th>Categoria</th><th>Paciente</th><th>Peso</th><th class="ocultar-m">Último aviso</th></tr></thead><tbody>
       ${pacs.map(p => p.medicamentos.map(m => { const ult = D.db().notificacoes.filter(n => n.pacienteId === p.id && n.insumo === m.nome).sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))[0]; return `<tr data-a="linha"><td><b style="font-weight:500">${esc(m.nome)}</b></td><td><span class="st" style="background:${COR_CAT[m.categoria][0]};color:${COR_CAT[m.categoria][1]}">${esc(D.CATEGORIAS[m.categoria].nome)}</span></td><td>${esc(p.iniciais)} · <span class="mono">${p.id}</span></td><td>+${D.CATEGORIAS[m.categoria].peso}</td><td class="ocultar-m">${ult ? dataCurta(ult.criadoEm) + " · " + esc(ult.status) : "—"}</td></tr>`; }).join("")).join("")}
@@ -556,9 +604,9 @@
     const meds = $("#meds"); let n = 2;
     $("#add-med").addEventListener("click", () => { meds.insertAdjacentHTML("beforeend", linha(n++)); $("[data-med]:last-child input", meds).focus(); });
     meds.addEventListener("click", e => { const b = e.target.closest("[data-remove]"); if (b && $$("[data-med]", meds).length > 1) b.parentNode.remove(); });
-    $("#f-pac").addEventListener("submit", e => {
+    $("#f-pac").addEventListener("submit", async e => {
       e.preventDefault();
-      const r = D.cadastrarPaciente({ id: $("#p-cod").value, iniciais: $("#p-ini").value, medicamentos: $$("[data-med]", meds).map(l => ({ nome: $("input", l).value, categoria: $("select", l).value })) }, usuario);
+      const r = await D.cadastrarPaciente({ id: $("#p-cod").value, iniciais: $("#p-ini").value, medicamentos: $$("[data-med]", meds).map(l => ({ nome: $("input", l).value, categoria: $("select", l).value })) }, usuario);
       if (r.erro) { $("#p-erro").textContent = r.erro; return; }
       toast("Paciente " + r.ok.id + " cadastrado.", "ok"); location.hash = "#/vincular?p=" + r.ok.id;
     });
@@ -573,11 +621,11 @@
       <div class="campo" style="margin-top:14px"><label for="v-email">E-mail do familiar ou cuidador</label><input class="inp" id="v-email" type="email" placeholder="nome@exemplo.com"></div>
       <fieldset style="border:0;padding:0;margin:20px 0 0"><legend class="rot">Pacientes</legend><div class="opcoes">${pacs.map(p => `<label class="opcao"><input type="checkbox" name="vp" value="${p.id}"${p.id === pre ? " checked" : ""}><span class="opcao__box"><b>${esc(p.iniciais)} · ${p.id}</b><small>${p.vinculos.length ? p.vinculos.length + " vinculado(s)" : "Sem familiar vinculado"}</small></span></label>`).join("")}</div></fieldset>
       <div id="v-erro" class="msg-erro" role="alert" style="margin-top:12px"></div><div class="wizard__nav"><span></span><button class="btn-p btn-p--azul" type="submit">Gerar convite</button></div></form><div id="v-res"></div>`;
-    $("#f-vinc").addEventListener("submit", e => {
+    $("#f-vinc").addEventListener("submit", async e => {
       e.preventDefault(); $("#v-erro").textContent = "";
-      const r = D.convidar($("#v-email").value, $$("input[name=vp]:checked").map(i => i.value), usuario);
+      const r = await D.convidar($("#v-email").value, $$("input[name=vp]:checked").map(i => i.value), usuario);
       if (r.erro) { $("#v-erro").textContent = r.erro; return; }
-      if (r.ok.vinculado) { toast(r.ok.vinculado.nome + " foi vinculado(a) aos pacientes.", "ok"); R.vincular(); return; }
+      if (r.ok.contaExistente) toast("Esta pessoa já tem conta. Ela abre o link e confirma com a própria senha.", "ok");
       const link = location.href.split("app.html")[0] + "entrar.html?convite=" + r.ok.convite;
       $("#v-res").innerHTML = `<section class="card passo-card" style="margin-top:14px">${cab(I.ok, "Convite gerado", `<span class="chip-n">${r.ok.convite}</span>`)}<p class="sub" style="margin-top:8px;font-size:.9rem">Código <b>${r.ok.convite}</b>. Envie o link abaixo por e-mail ou mensagem. Com ele, a pessoa cria a conta.</p><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><input class="inp" readonly value="${esc(link)}" id="v-link" style="flex:1;min-width:240px" aria-label="Link do convite"><button class="btn-p btn-p--azul" type="button" id="v-copiar" style="height:44px">Copiar link</button></div><p class="sub" style="margin-top:10px;font-size:.8rem">Demonstração: o e-mail não é enviado de verdade.</p></section>`;
       animaEntrada($("#v-res"));
@@ -598,7 +646,7 @@
     if (aba === "todos") {
       const todos = vis.slice().sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm));
       h += `<section class="card" data-a style="margin-top:14px">${cab(I.lista, "Todos os avisos", `<span class="chip-n">${todos.length}</span>`)}<div class="tab-wrap"><table class="tab-app"><thead><tr><th>Insumo</th><th>Paciente</th><th class="ocultar-m">Aberto em</th><th>Status</th><th>Dias até a entrega</th><th class="ocultar-m">Registrado por</th></tr></thead><tbody>
-        ${todos.map(n => { const p = D.paciente(n.pacienteId), d = diasEntrega(n); return `<tr data-a="linha"><td><a href="#/aviso/${n.id}"><b style="font-weight:500">${esc(n.insumo)}</b><br><span class="mono">${n.id}</span></a></td><td>${esc(p.iniciais)} · <span class="mono">${p.id}</span></td><td class="ocultar-m">${dataCurta(n.criadoEm)}</td><td>${st(n.status)}${D.emAtraso(n) ? ' <span class="st st--atraso">Em atraso</span>' : ""}</td><td>${d == null ? "—" : `<span class="tempo ${d <= 7 ? "tempo--ok" : ""}">${num(d, 0)} dias</span>`}</td><td class="ocultar-m">${esc((D.usuario(n.criadoPor) || {}).nome || "—")}</td></tr>`; }).join("")}
+        ${todos.map(n => { const p = D.paciente(n.pacienteId), d = diasEntrega(n); return `<tr data-a="linha"><td><a href="#/aviso/${n.id}"><b style="font-weight:500">${esc(n.insumo)}</b><br><span class="mono">${n.id}</span></a></td><td>${esc(p.iniciais)} · <span class="mono">${p.id}</span></td><td class="ocultar-m">${dataCurta(n.criadoEm)}</td><td>${st(n.status)}${D.emAtraso(n) ? prazoVencido(n) : ""}</td><td>${d == null ? "—" : `<span class="tempo ${d <= 7 ? "tempo--ok" : ""}">${num(d, 0)} ${Math.round(d) === 1 ? "dia" : "dias"}</span>`}</td><td class="ocultar-m">${esc((D.usuario(n.criadoPor) || {}).nome || "—")}</td></tr>`; }).join("")}
         </tbody></table></div></section>`;
     } else {
       const ultimas = ent.slice().sort((a, b) => entregaEm(b) - entregaEm(a)).slice(0, 5);
@@ -612,7 +660,7 @@
           ${ultimas.length ? ultimas.map(n => { const d = diasEntrega(n), w = Math.min(100, d / 14 * 100); return `<div class="prazo-linha"><div><b>${esc(n.insumo)}</b><span class="mono">${n.id} · ${esc(D.paciente(n.pacienteId).iniciais)}</span></div><div class="prazo-trilho"><span class="${d > 7 ? "is-ruim" : ""}" data-w="${w}%"></span><i style="left:50%"></i></div>${d <= 7 ? '<span class="st st--entregue">No prazo</span>' : '<span class="st st--pendente">Atrasou</span>'}</div>`; }).join("") : `<div class="vazio">Nenhuma entrega ainda.</div>`}
           <p style="margin-top:8px;color:var(--ap-txt3);font-size:.74rem">A linha preta marca o prazo de 7 dias.</p></section>
         <section class="card" data-a>${farm ? `<div class="card__cab"><h2>Falhas por microárea</h2></div><div class="barras-h">${Object.keys(I2.porMicroarea).sort().map(a => { const v = I2.porMicroarea[a], mx = Math.max(1, ...Object.values(I2.porMicroarea)); return `<div><p>Microárea ${esc(a)}<span>${v}</span></p><div class="barras-h__f"><span data-w="${v / mx * 100}%"></span></div></div>`; }).join("")}</div><div class="lista-num" style="margin-top:16px"><p>Em atraso agora <b style="color:#c62f3c">${I2.atrasadas}</b></p><p>Tempo médio <b>${num(I2.mediaDias, 1)} dias</b></p><p>Cancelados <b>${I2.canceladas}</b></p></div>` :
-          `<div class="card__cab"><h2>Situação dos pacientes</h2></div><div class="lista-num">${pacs.map(p => { const ns = vis.filter(n => n.pacienteId === p.id), ab = ns.filter(D.emAberto); return `<p><span class="cel-pessoa" style="color:#15171c">${av(ini(p.iniciais), p.id)}<span>${esc(p.iniciais)}<small>${ns.length} aviso(s) no total</small></span></span>${ab.length ? '<span class="st st--pendente">Com falta</span>' : '<span class="st st--entregue">Em dia</span>'}</p>`; }).join("")}</div>`}</section></div>`;
+          `<div class="card__cab"><h2>Situação dos pacientes</h2></div><div class="lista-num">${pacs.map(p => { const ns = vis.filter(n => n.pacienteId === p.id), ab = ns.filter(D.emAberto); return `<p><span class="cel-pessoa" style="color:#15171c" title="Código do paciente no cadastro da unidade e iniciais. O MedKi não guarda o nome completo (RN03, LGPD)."><span>${p.id} (${esc(p.iniciais)})<small>${ns.length} aviso(s) no total</small></span></span>${ab.length ? '<span class="st st--pendente">Com falta</span>' : '<span class="st st--entregue">Em dia</span>'}</p>`; }).join("")}</div>`}</section></div>`;
       // recorrência / avisos recentes + concluídos
       const porCat = Object.keys(D.CATEGORIAS).map(k => [k, ent.filter(n => n.categoria === k).length]), totE = ent.length || 1;
       let esquerda;
@@ -647,9 +695,9 @@
       <div class="campo"><label for="pz-ent">Entrega (dias corridos)</label><input class="inp" id="pz-ent" type="number" min="1" max="60" step="1" inputmode="numeric" value="${u.prazoEntregaDias}"><small>Contados a partir da abertura do aviso.</small></div></div>
       <p class="sub" style="margin-top:12px;font-size:.84rem">Os novos prazos valem para os avisos registrados daqui em diante. Os avisos já abertos mantêm o prazo com que foram criados.</p>
       <div id="pz-erro" class="msg-erro" role="alert" style="margin-top:10px"></div><div class="wizard__nav"><span></span><button class="btn-p btn-p--azul" type="submit">Salvar prazos</button></div></form>`;
-    $("#f-prazos").addEventListener("submit", e => {
+    $("#f-prazos").addEventListener("submit", async e => {
       e.preventDefault();
-      const r = D.salvarPrazos({ resposta: $("#pz-resp").value, entrega: $("#pz-ent").value }, usuario);
+      const r = await D.salvarPrazos({ resposta: $("#pz-resp").value, entrega: $("#pz-ent").value }, usuario);
       if (r.erro) { $("#pz-erro").textContent = r.erro; return; }
       $("#pz-erro").textContent = ""; toast("Prazos salvos.", "ok");
     });
@@ -662,17 +710,17 @@
     tela.innerHTML = `<div id="contas-box"><section class="card" data-a>${cab(I.equipe, "Contas do Agente Comunitário de Saúde e da farmácia", `<span class="chip-n">${contas.length}</span>`)}<div style="position:absolute;top:18px;right:18px"><button class="btn-p btn-p--escuro" type="button" id="c-nova">${I.mais}Nova conta</button></div>
       <div class="tab-wrap"><table class="tab-app"><thead><tr><th>Nome</th><th class="ocultar-m">E-mail</th><th>Perfil</th><th>Microárea</th><th>Situação</th><th></th></tr></thead><tbody>
       ${contas.map(u => `<tr data-a="linha"><td><span class="cel-pessoa">${av(ini(u.nome), u.id)}<span>${esc(u.nome)}${u.responsavel ? "<small>Responsável</small>" : ""}</span></span></td><td class="ocultar-m">${esc(u.email)}</td><td>${u.perfil === "acs" ? "<b>Agente Comunitário de Saúde</b>" : "Farmácia"}</td><td>${esc(u.microarea || "—")}</td><td>${u.ativo ? '<span class="st st--entregue">Ativa</span>' : '<span class="st st--cancelada">Desativada</span>'}</td><td style="white-space:nowrap">${u.id !== usuario.id ? `<button class="btn-p" type="button" data-editar="${u.id}">Editar</button> <button class="btn-p${u.ativo ? " btn-p--perigo" : ""}" type="button" data-alternar="${u.id}">${u.ativo ? "Desativar" : "Reativar"}</button>` : ""}</td></tr>`).join("")}
-      </tbody></table></div><p style="margin-top:12px;color:var(--ap-txt3);font-size:.8rem">Contas novas recebem a senha provisória <b>medki123</b> (demonstração).</p></section></div>`;
+      </tbody></table></div><p style="margin-top:12px;color:var(--ap-txt3);font-size:.8rem">Cada conta nova recebe uma senha provisória gerada pelo servidor.</p></section></div>`;
     const form = u => {
       u = u || { perfil: "acs" };
       modal(`<h2 id="modal-t">${u.id ? "Editar conta" : "Nova conta"}</h2><form id="f-conta" novalidate style="display:grid;gap:14px;margin-top:16px"><div class="campo"><label for="ct-nome">Nome</label><input class="inp" id="ct-nome" value="${esc(u.nome || "")}"></div><div class="campo"><label for="ct-email">E-mail</label><input class="inp" id="ct-email" type="email" value="${esc(u.email || "")}"></div><div class="duas-col"><div class="campo"><label for="ct-perfil">Perfil</label><select class="inp" id="ct-perfil"><option value="acs"${u.perfil === "acs" ? " selected" : ""}>Agente Comunitário de Saúde</option><option value="farmacia"${u.perfil === "farmacia" ? " selected" : ""}>Farmácia</option></select></div><div class="campo"><label for="ct-area">Microárea (Agente Comunitário)</label><input class="inp" id="ct-area" maxlength="2" placeholder="03" value="${esc(u.microarea || "")}"></div></div><div id="ct-erro" class="msg-erro" role="alert"></div><div class="modal__acoes"><button class="btn-p" type="button" data-fecha-modal>Cancelar</button><button class="btn-p btn-p--azul" type="submit">Salvar</button></div></form>`, box => {
-        $("#f-conta", box).addEventListener("submit", e => { e.preventDefault(); const r = D.salvarConta({ id: u.id, nome: $("#ct-nome", box).value, email: $("#ct-email", box).value, perfil: $("#ct-perfil", box).value, microarea: $("#ct-area", box).value.trim() }, usuario); if (r.erro) { $("#ct-erro", box).textContent = r.erro; return; } fechaModal(); toast("Conta salva.", "ok"); recarrega(); });
+        $("#f-conta", box).addEventListener("submit", async e => { e.preventDefault(); const r = await D.salvarConta({ id: u.id, nome: $("#ct-nome", box).value, email: $("#ct-email", box).value, perfil: $("#ct-perfil", box).value, microarea: $("#ct-area", box).value.trim() }, usuario); if (r.erro) { $("#ct-erro", box).textContent = r.erro; return; } fechaModal(); recarrega(); if (r.senhaProvisoria) modal(`<h2 id="modal-t">Conta criada</h2><p class="sub" style="margin-top:10px">Senha provisória de <b>${esc(r.ok.nome)}</b>. Entregue à pessoa por um canal seguro; ela não aparece de novo.</p><input class="inp" readonly value="${esc(r.senhaProvisoria)}" style="margin-top:14px;font-family:monospace" aria-label="Senha provisória"><div class="modal__acoes"><button class="btn-p btn-p--azul" type="button" data-fecha-modal>Pronto</button></div>`); else toast("Conta salva.", "ok"); });
       });
     };
     $("#c-nova").addEventListener("click", () => form());
     $("#contas-box").addEventListener("click", e => {
       let b = e.target.closest("[data-editar]"); if (b) { form(D.usuario(b.dataset.editar)); return; }
-      b = e.target.closest("[data-alternar]"); if (b) { const r = D.alternarConta(b.dataset.alternar, usuario); if (r.erro) toast(r.erro, "erro"); else { toast("Conta " + (r.ok.ativo ? "reativada" : "desativada") + ".", "ok"); recarrega(); } }
+      b = e.target.closest("[data-alternar]"); if (b) { D.alternarConta(b.dataset.alternar, usuario).then(r => { if (r.erro) toast(r.erro, "erro"); else { toast("Conta " + (r.ok.ativo ? "reativada" : "desativada") + ".", "ok"); recarrega(); } }); }
     });
   };
 
@@ -711,7 +759,8 @@
     atualizaSino();
   }
   let trocando = null;
-  function render(primeira) {
+  async function render(primeira) {
+    if (!primeira) await D.carregar();
     usuario = D.sessao(); if (!usuario) { location.replace("entrar.html"); return; }
     const rota = lerRota();
     if (primeira || reduz) { desenha(rota); return; }

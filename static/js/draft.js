@@ -7,7 +7,7 @@ export function initDraft() {
     storage(s => { for (const k of Object.keys(s)) if (k.startsWith('medki-draft-')) s.removeItem(k); });
     return;
   }
-  document.querySelector('form[action="/sair/"]')?.addEventListener('submit', () => storage(s => s.removeItem(key)));
+  document.querySelector('form[action="/classico/sair/"]')?.addEventListener('submit', () => storage(s => s.removeItem(key)));
   if (document.getElementById('notification-saved')) storage(s => s.removeItem(key));
   const form = document.getElementById('shortage-form');
   if (form) {

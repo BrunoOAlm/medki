@@ -57,7 +57,7 @@
             <div id="alerta2" class="alerta" role="alert" hidden></div>
             <div class="campo"><label for="cv-cod">Código do convite</label><input class="inp" id="cv-cod" autocomplete="off" required></div>
             <div class="campo"><label for="cv-nome">Seu nome</label><input class="inp" id="cv-nome" autocomplete="name" required></div>
-            <div class="campo"><label for="cv-senha">Crie uma senha</label><input class="inp" id="cv-senha" type="password" autocomplete="new-password" required><small>Pelo menos 8 caracteres.</small></div>
+            <div class="campo"><label for="cv-senha">Crie uma senha</label><input class="inp" id="cv-senha" type="password" autocomplete="new-password" required><small>Pelo menos 8 caracteres. Se este e-mail já tem conta, use a senha dela.</small></div>
             <button class="btn btn-azul" type="submit">Criar conta</button>
             <button class="btn btn-linha" type="button" id="volta-login">Voltar</button>
           </form>
@@ -70,26 +70,30 @@
   <script>
     (function () {
       var qs = new URLSearchParams(location.search), f = document.getElementById("form-entrar"), al = document.getElementById("alerta");
-      if (MedKiDB.sessao()) { location.replace("app.html"); return; }
+      // Busca a sessão no servidor (e o cookie CSRF usado pelos formulários abaixo)
+      MedKiDB.carregar().then(function () { if (MedKiDB.sessao()) location.replace("app.html"); });
+      if (qs.has("expirou") && window.MedKiToast) MedKiToast("Sua sessão terminou por inatividade. Entre novamente.");
       function mostra(e, msg) { e.textContent = msg; e.hidden = false; }
       f.addEventListener("submit", function (ev) {
         ev.preventDefault(); al.hidden = true;
         var email = f.email.value.trim(), senha = f.senha.value;
         if (!email || !senha) { mostra(al, "Preencha e-mail e senha."); (email ? f.senha : f.email).focus(); return; }
-        var r = MedKiDB.entrar(email, senha); if (r.erro) { mostra(al, r.erro); f.senha.focus(); return; }
-        location.href = "app.html" + (qs.get("destino") ? "#" + qs.get("destino") : "");
+        MedKiDB.entrar(email, senha).then(function (r) {
+          if (r.erro) { mostra(al, r.erro); f.senha.focus(); return; }
+          location.href = "app.html" + (qs.get("destino") ? "#" + qs.get("destino") : "");
+        });
       });
       var aL = document.getElementById("area-login"), aC = document.getElementById("area-convite");
       function abreConvite(cod) { aL.hidden = true; aC.hidden = false; if (cod) document.getElementById("cv-cod").value = cod; document.getElementById(cod ? "cv-nome" : "cv-cod").focus(); }
       document.getElementById("abre-convite").addEventListener("click", function (e) { e.preventDefault(); abreConvite(); });
       document.getElementById("volta-login").addEventListener("click", function () { aC.hidden = true; aL.hidden = false; });
       if (qs.get("convite")) abreConvite(qs.get("convite")); else if (qs.has("criar")) abreConvite();
-      if (qs.has("restaurar")) { MedKiDB.reiniciar(); Object.keys(localStorage).forEach(function (k) { if (k.indexOf("medki-rascunho") === 0) localStorage.removeItem(k); }); if (window.MedKiToast) MedKiToast("Dados de demonstração restaurados.", "ok"); }
       document.getElementById("form-convite").addEventListener("submit", function (ev) {
         ev.preventDefault(); var a2 = document.getElementById("alerta2"); a2.hidden = true;
-        var r = MedKiDB.aceitarConvite(document.getElementById("cv-cod").value.trim().toUpperCase(), document.getElementById("cv-nome").value, document.getElementById("cv-senha").value);
-        if (r.erro) { mostra(a2, r.erro); return; }
-        MedKiDB.entrar(r.ok.email, document.getElementById("cv-senha").value); location.href = "app.html";
+        MedKiDB.aceitarConvite(document.getElementById("cv-cod").value.trim(), document.getElementById("cv-nome").value, document.getElementById("cv-senha").value).then(function (r) {
+          if (r.erro) { mostra(a2, r.erro); return; }
+          location.href = "app.html";
+        });
       });
     })();
   </script>

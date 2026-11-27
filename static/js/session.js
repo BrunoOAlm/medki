@@ -24,6 +24,6 @@ export function initSession() {
   setInterval(() => {
     const idle = Date.now() - lastServerActivity;
     if (idle > 28 * 60000 && dialog && !dialog.open) dialog.showModal();
-    if (idle >= 30 * 60000) window.location.assign('/entrar/?expired=1');
+    if (idle >= 30 * 60000) window.location.assign('/classico/entrar/?expired=1');
   }, 10000);
 }

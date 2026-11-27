@@ -46,7 +46,7 @@ class WebTests(Fixtures, TestCase):
         n = Notification.objects.get()
         self.assertEqual(n.author_id, user.pk)
         self.as_user(self.pharmacy)
-        self.assertContains(self.client.get('/'), 'Insulina')
+        self.assertContains(self.client.get('/classico/'), 'Insulina')
         for expected in ['pending', 'picking', 'shipping']:
             self.assertEqual(self.client.post(reverse('change_status', args=[n.pk]), {'action': 'advance', 'expected': expected}).status_code, 302)
         self.as_user(user)
@@ -142,7 +142,7 @@ class WebTests(Fixtures, TestCase):
         session = self.client.session
         session['last_activity'] = time.time() - 1801
         session.save()
-        self.assertEqual(self.client.get('/').status_code, 302)
+        self.assertEqual(self.client.get('/classico/').status_code, 302)
         self.as_user(self.notifier)
         self.assertEqual(self.client.post(reverse('renew')).status_code, 200)
         self.assertLess(time.time() - self.client.session['last_activity'], 5)
@@ -172,11 +172,11 @@ class WebTests(Fixtures, TestCase):
     def test_filters_and_html_escaping(self):
         n = self.new_notification()
         self.as_user(self.pharmacy)
-        self.assertContains(self.client.get('/', {'category': 'insulin', 'status': 'pending', 'microarea': self.area.pk}), 'Insulina')
-        self.assertNotContains(self.client.get('/', {'category': 'diaper'}), f'#{n.pk} ·')
-        self.assertNotContains(self.client.get('/', {'microarea': self.area2.pk}), f'#{n.pk} ·')
+        self.assertContains(self.client.get('/classico/', {'category': 'insulin', 'status': 'pending', 'microarea': self.area.pk}), 'Insulina')
+        self.assertNotContains(self.client.get('/classico/', {'category': 'diaper'}), f'#{n.pk} ·')
+        self.assertNotContains(self.client.get('/classico/', {'microarea': self.area2.pk}), f'#{n.pk} ·')
         Notification.objects.filter(pk=n.pk).update(note='<script>alert(1)</script>', response_due=timezone.now() - timedelta(days=1))
-        self.assertContains(self.client.get('/', {'late': '1'}), 'Em atraso')
+        self.assertContains(self.client.get('/classico/', {'late': '1'}), 'Em atraso')
         response = self.client.get(reverse('detail', args=[n.pk]))
         self.assertContains(response, '&lt;script&gt;')
         self.assertNotContains(response, '<script>alert(1)</script>')

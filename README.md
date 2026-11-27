@@ -26,15 +26,28 @@ python3 -m venv .venv
 .venv/bin/python manage.py runserver 127.0.0.1:8000
 ```
 
-Abra **http://127.0.0.1:8000/**. Se `py` não existir, substitua pelo caminho do Python instalado. Não precisa ativar o ambiente virtual. `requirements.lock` fixa as versões verificadas; `requirements.txt` descreve as faixas para atualizações deliberadas. Atualizar dependências exige rodar os testes novamente.
+Abra **http://127.0.0.1:8000/**. No Windows, `abrir-site.bat` faz todos os passos acima e abre o navegador. Se `py` não existir, substitua pelo caminho do Python instalado. Não precisa ativar o ambiente virtual. `requirements.lock` fixa as versões verificadas; `requirements.txt` descreve as faixas para atualizações deliberadas. Atualizar dependências exige rodar os testes novamente.
 
-O comando `seed_demo` cria unidade fictícia, duas microáreas, catálogo, paciente `DEMO-001`, vínculos e duas faltas. É idempotente: não troca senhas nem sobrescreve registros existentes. Gera uma senha aleatória **impressa somente no terminal**, comum às contas novas daquela execução:
+O Django serve tudo no mesmo endereço:
+
+| Endereço | O que é |
+| --- | --- |
+| `/figma/index.html` e `/paginas/` | Site e painel (front em HTML, CSS e JavaScript) |
+| `/api/` | API JSON usada pelo painel; as regras ficam em `care/services.py` e `care/selectors.py` (`care/api.py` só traduz o formato) |
+| `/classico/` | Telas originais renderizadas pelo Django, mantidas como alternativa |
+
+O front não funciona aberto direto do disco nem em outro servidor: ele precisa da API no mesmo endereço (sessão e CSRF).
+
+O comando `seed_demo` cria a unidade fictícia, duas microáreas, o catálogo, seis pacientes, vínculos e 90 dias de avisos para os indicadores. É idempotente: não troca senhas nem sobrescreve registros existentes. Gera uma senha aleatória **impressa somente no terminal**, comum a todas as contas:
 
 | E-mail fictício | Perfil | Acesso |
 | --- | --- | --- |
-| `acs@medki.example` | ACS | Microárea 01 |
-| `familiar@medki.example` | Notificante | Pacientes vinculados |
-| `farmacia@medki.example` | Farmácia responsável | Unidade fictícia; contas e prazos |
+| `paula@unidade.exemplo` | Farmácia responsável | Unidade; contas e prazos |
+| `rafael@unidade.exemplo` | Farmácia | Unidade |
+| `joana@unidade.exemplo` | ACS | Microárea 01 |
+| `marcos@unidade.exemplo` | ACS | Microárea 02 |
+| `ana@familia.exemplo` | Notificante | P-0142 e P-0157 |
+| `carlos@familia.exemplo` | Notificante | P-0203 e P-0219 |
 
 Guarde a senha localmente. Opcionalmente defina `MEDKI_DEMO_PASSWORD` antes do primeiro seed. Nunca publique a senha, o banco, capturas com credenciais, `.env` ou `.secret_key`. O seed só roda em modo de demonstração (`MEDKI_DEBUG=1`). Não há senha universal no código.
 

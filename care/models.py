@@ -54,7 +54,8 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     email = models.EmailField('E-mail', unique=True)
-    role = models.CharField('Perfil', max_length=12, choices=Role.choices)
+    name = models.CharField('Nome', max_length=80, blank=True)
+    role =models.CharField('Perfil', max_length=12, choices=Role.choices)
     unit = models.ForeignKey(Unit, on_delete=models.PROTECT, null=True, blank=True)
     microarea = models.ForeignKey(Microarea, on_delete=models.PROTECT, null=True, blank=True)
     responsible = models.BooleanField('Farmacêutico responsável', default=False)
